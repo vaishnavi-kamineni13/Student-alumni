@@ -1,0 +1,267 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Requests</title>
+
+    <!-- Title logo -->
+    <link rel="icon" href="{% static 'img/core-img/connectlogo.png' %}">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+    <!-- Laptop text font-->
+    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ##### Header Area Start ##### -->
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <!-- Classy Menu -->
+            <nav class="classy-navbar" id="essenceNav">
+                <!-- Logo -->
+                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width:130px;" alt=""></a>
+                <!-- Navbar Toggler -->
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+                <!-- Menu -->
+                <div class="classy-menu">
+                    <!-- close btn -->
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                    </div>
+                    <!-- Nav Start -->
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="{% url 'index' %}">Home</a></li>
+                            <li><a href="#">Products</a>
+                                <ul class="dropdown">
+                                    {% if user.is_authenticated %}
+                                    <li class="nohigh"><a href="{% url 'books' my_username=user.username %}">Books</a></li>
+                                    <li><a href="{% url 'electronics' my_username=user.username %}">Electronic gadgets</a></li>
+                                    <li><a href="{% url 'stationery' my_username=user.username %}">Stationery</a></li>
+                                    <li><a href="{% url 'sports' my_username=user.username %}">Sports</a></li>
+                                    <li><a href="{% url 'others' my_username=user.username %}">Others</a></li>
+                                    {% else %}
+                                    <li class="nohigh"><a href="{% url 'books' my_username='x' %}">Books</a></li>
+                                    <li><a href="{% url 'electronics' my_username='x' %}">Electronic gadgets</a></li>
+                                    <li><a href="{% url 'stationery' my_username='x' %}">Stationery</a></li>
+                                    <li><a href="{% url 'sports' my_username='x' %}">Sports</a></li>
+                                    <li><a href="{% url 'others' my_username='x' %}">Others</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            <li><a href="{% url 'event' %}">Events</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                        </ul>
+                    </div>
+                    <!-- Nav End -->
+                </div>
+
+            </nav>
+
+            <!-- Header Meta Data -->
+            <div class="header-meta d-flex clearfix justify-content-end">
+              <!-- {% if user.is_authenticated %}
+                {% for s in sign1 %}
+                {% if s.username == user.username %}
+                <div class="hello">
+                    <p style="text-align:center;">Hello,{{s.full_name}}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}-->
+                <!-- Search Area -->
+                <!--<div class="search-area">
+                    <form action="#" method="post">
+                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </form>
+                </div>-->
+                <!-- Favourite Area -->
+                {% if user.is_authenticated %}
+                <div class="favourite-area">
+                    <a href="{% url 'favourites' direct='y' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
+                </div>
+                {% else %}
+                <div class="favourite-area">
+                    <a href="{% url 'login' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
+                </div>
+                {% endif %}
+                <!-- User Login Info -->
+                {% if user.is_authenticated %}
+                <div class="user-login-info">
+                    <div class="dropdown">
+                        <a href="#"><i class="fa fa-user mt-md-4" aria-hidden="true" style="font-size: 22px;"></i></a>
+                            <div class="dropdown-content" style="width:100px;">
+                                <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">Profile</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'requests' my_id=1 bool='x'  %}" style="line-height:2; text-align:left; color:#000000; border-left:none;">Requests</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'orders' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Orders</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'sold' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Items Sold</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
+                            </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="user-login-info">
+                    <a href="{% url 'login' %}"><i class="fa fa-user-o" aria-hidden="true" style="font-size: 20px;"></i></a>
+                </div>
+                {% endif %}
+            </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+    <div style="padding-bottom:40px;">
+
+    
+    <h1 style="padding-bottom: 40px; padding-top:40px; text-align:center;">&#160 &#160 Your Product Requests</h1>
+    {% if user.username in request_seller_list %}
+    {% for r in r1 %}
+    {% if user.username == r.seller_username %}
+    <div style="background-color:#d2d6d6; padding-bottom:15px; padding-top:20px; margin-left:40px;margin-right:40px; margin-bottom:15px; font-family: 'Ubuntu', sans-serif; font-weight:900; border:gray solid 1px; border-radius:8px;" class="row">
+        <div class="col-6 col-md-3" style="font-size: 20px;">{{r.buyer_username}}</div>
+        <div class="col-6 col-md-3" style="font-size: 20px;">{{r.product_title}}</div>
+        <div class="col-6 col-md-2 mt-5 mt-md-0" style="font-size: 20px;">{{r.category}}</div>
+        <div class="col-3 col-md-2 mt-5 mt-md-0 pr-5 pr-lg-0 pl-sm-5"><a href="{% url 'requests' my_id=r.id bool='Accept' %}" class="btn btn-light" style="float: right; margin-top:8px; margin-right:20px;">Accept</a></div>
+        <div class="col-3 col-md-2 mt-5 mt-md-0"><a href="{% url 'requests' my_id=r.id bool='Decline' %}" class="btn btn-dark" style="float: right; margin-right:50px; margin-top:8px;">Decline</a></div>
+        <!--<p style="font-size:20px; color:black;">&#160 &#160 &#160 &#160 {{r.buyer_username}} &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 {{r.product_title}} &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 {{r.category}} &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 <a href="{% url 'requests' my_id=r.id bool='Decline' %}" class="btn btn-dark" style="float: right; margin-right:50px; margin-top:8px;">Decline</a> &#160 &#160 &#160    <a href="{% url 'requests' my_id=r.id bool='Accept' %}" class="btn btn-light" style="float: right; margin-top:8px; margin-right:20px;">Accept</a></p>
+        <p>{{r.product_title}}</p>-->
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <h3 style="text-align: center;"><i class="fa fa-frown-o" aria-hidden="true" style="font-size: 150px; text-align:center; font-weight:100; color:gray;"></i></h3>
+    <h3 style="text-align: center; color:gray; margin-bottom:40px; font-size:30px;"> No Request Updates </h1>
+    {% endif %}
+
+    <hr style="border:0.7px solid black; margin-top:50px;">
+
+    <h1 style="padding-bottom: 40px; padding-top:40px; text-align:center;">&#160 &#160 Requests Sent</h1>
+    {% if user.username in request_buyer_list %}
+    {% for r in r1 %}
+    {% if user.username == r.buyer_username %}
+    <div style="background-color:#d2d6d6; padding-bottom:15px; padding-top:20px; margin-left:40px;margin-right:40px; margin-bottom:15px; font-family: 'Ubuntu', sans-serif; font-weight:900; border:gray solid 1px; border-radius:8px;" class="row">
+        <div class="col-6 col-md-3" style="font-size: 20px;">{{r.seller_username}}</div>
+        <div class="col-6 col-md-3" style="font-size: 20px;">{{r.product_title}}</div>
+        <div class="col-6 col-md-3 mt-5 mt-md-0" style="font-size: 20px;">{{r.category}}</div>
+        <div class="col-6 col-md-3 mt-5 mt-md-0 pr-sm-5 pr-md-3"> <a href="{% url 'requests' my_id=r.id bool='Decline' %}" class="btn btn-dark" style="float: right;">Withdraw Request</a></div>
+        <!--<p style="font-size:20px; color:black;">&#160 &#160 &#160 &#160 {{r.seller_username}} &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 {{r.product_title}} &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 {{r.category}} &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 &#160 <a href="{% url 'requests' my_id=r.id bool='Decline' %}" class="btn btn-dark" style="float: right; margin-right:55px; margin-top:8px;">Withdraw Request</a></p>
+        <p>{{r.seller_username}}</p>-->
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <h3 style="text-align: center;"><i class="fa fa-shopping-cart" aria-hidden="true" style="font-size: 150px; color:gray" ></i></h3>
+    <h3 style="text-align: center; color:gray;">No Requests Sent</h1>
+    {% endif %}
+
+
+    <div>
+        {% for message in messages %}
+        <h3 style="font-size: 15px; color:red; padding-top:25px;text-align:center; padding-bottom:20px;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{message}}</h3>
+        {% endfor %}
+    </div>
+    </div>
+      <!-- ##### Footer Area Start ##### -->
+      <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="{% static 'img/core-img/connect.png' %}" alt="" style="width:130px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="{% url 'event' %}">Events</a></li>
+                            <li><a href="#">FAQ's</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_social_area">
+                            <h6 style="color:white; margin-left:10px;">FOLLOW US</h6>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="{% static 'js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Plugins js -->
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <!-- Classy Nav js -->
+    <script src="{% static 'js/classy-nav.min.js' %}"></script>
+    <!-- Active js -->
+    <script src="{% static 'js/active.js' %}"></script>
+    <!-- GetButton.io widget -->
+<script type="text/javascript">
+    (function () {
+        var options = {
+            whatsapp: "{{user.mobilenumber}}", // WhatsApp number
+            call_to_action: "Message us", // Call to action
+            position: "right", // Position may be 'right' or 'left'
+        };
+        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
+        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+    })();
+</script>
+<!-- /GetButton.io widget -->
+
+</body>
+
+</html>

@@ -1,0 +1,387 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Connect</title>
+
+    <!-- Title logo -->
+    <link rel="icon" href="{% static 'img/core-img/connectlogo.png' %}">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+    <!-- Laptop text font-->
+    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ##### Header Area Start ##### -->
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <!-- Classy Menu -->
+            <nav class="classy-navbar" id="essenceNav">
+                <!-- Logo -->
+                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width:130px;" alt=""></a>
+                <!-- Navbar Toggler -->
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+                <!-- Menu -->
+                <div class="classy-menu">
+                    <!-- close btn -->
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                    </div>
+                    <!-- Nav Start -->
+                    <div class="classynav">
+                        <ul>
+                            <li class="highligh"><a href="{% url 'index' %}">Home</a></li>
+                            <li><a href="#">Products</a>
+                                <ul class="dropdown">
+                                    {% if user.is_authenticated %}
+                                    <li><a href="{% url 'books' my_username=user.username %}">Books</a></li>
+                                    <li><a href="{% url 'electronics' my_username=user.username %}">Electronic gadgets</a></li>
+                                    <li><a href="{% url 'stationery' my_username=user.username %}">Stationery</a></li>
+                                    <li><a href="{% url 'sports' my_username=user.username %}">Sports</a></li>
+                                    <li><a href="{% url 'others' my_username=user.username %}">Others</a></li>
+                                    {% else %}
+                                    <li><a href="{% url 'books' my_username='x' %}">Books</a></li>
+                                    <li><a href="{% url 'electronics' my_username='x' %}">Electronic gadgets</a></li>
+                                    <li><a href="{% url 'stationery' my_username='x' %}">Stationery</a></li>
+                                    <li><a href="{% url 'sports' my_username='x' %}">Sports</a></li>
+                                    <li><a href="{% url 'others' my_username='x' %}">Others</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            <li><a href="{% url 'event' %}">Events</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                        </ul>
+                    </div>
+                    <!-- Nav End -->
+                </div>
+
+            </nav>
+
+            <!-- Header Meta Data -->
+            <div class="header-meta d-flex clearfix justify-content-end">
+              <!-- {% if user.is_authenticated %}
+                {% for s in sign1 %}
+                {% if s.username == user.username %}
+                <div class="hello">
+                    <p style="text-align:center;">Hello,{{s.full_name}}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}-->
+                <!-- Search Area -->
+               <!-- <div class="search-area">
+                    <form action="#" method="post">
+                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </form>
+                </div>-->
+                <!-- Favourite Area -->
+                {% if user.is_authenticated %}
+                <div class="favourite-area">
+                    <a href="{% url 'favourites' direct='y' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
+                </div>
+                {% else %}
+                <div class="favourite-area">
+                    <a href="{% url 'login' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
+                </div>
+                {% endif %}
+                <!-- User Login Info -->
+                {% if user.is_authenticated %}
+                <div class="user-login-info">
+                    <div class="dropdown">
+                        <a href="#"><i class="fa fa-user mt-md-4" aria-hidden="true" style="font-size: 22px;"></i></a>
+                            <div class="dropdown-content" style="width:100px;">
+                                <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">My Profile</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'requests' my_id=1 bool='x' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Requests</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'orders' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Orders</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'sold' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Items Sold</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
+                            </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="user-login-info">
+                    <a href="{% url 'login' %}"><i class="fa fa-user-o" aria-hidden="true" style="font-size: 20px;"></i></a>
+                </div>
+                {% endif %}
+            </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+
+
+
+    <!--##### Welcome Area Start #####--> 
+    <div class="row">
+        <div class="col-12">
+            <section class="welcome_area bg-img background-overlay img-fluid img-thumbnail" style="background-image: url({% static 'img/bg-img/hands.png' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center; "></section>
+
+        </div>
+    </div>
+
+ <!--  <div class="container h-100">
+        <div class="row h-100 justify-content-end">
+            <div class="col-lg-12 mr-xl-0 ">
+                <img src="img/bg-img/handstem.jpg" class="img-fluid" style="background: center center/cover no-repeat;">
+            </div>
+        </div>
+    </div>-->
+
+    <!-- ##### Welcome Area End ##### -->
+
+    <!-- ##### Top Catagory Area Start ##### -->
+    <div class="top_catagory_area section-padding-80 clearfix">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4 mt-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/books.jpg' %});">
+                        <div class="catagory-content">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'books' my_username=user.username %}">Books</a>
+                            {% else %}
+                            <a href="{% url 'books' my_username='x' %}">Books</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4 mt-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/electronic.jpg' %});">
+                        <div class="catagory-content">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'electronics' my_username=user.username %}" style="text-align: center;">Electronic gadgets</a>                     
+                            {% else %}
+                            <a href="{% url 'electronics' my_username='x' %}" style="text-align: center;">Electronic gadgets</a>                     
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Catagory -->
+                <div class="col-12 col-sm-6 col-md-4 mt-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/stationary.jpg' %});">
+                        <div class="catagory-content">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'stationery' my_username=user.username %}">Stationery</a>
+                            {% else %}
+                            <a href="{% url 'stationery' my_username='x' %}">Stationery</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!--Single Category-->
+                <div class="col-12 col-sm-6 col-md-4 mt-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/sports.jpg' %});">
+                        <div class="catagory-content">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'sports' my_username=user.username %}">Sports</a>
+                            {% else %}
+                            <a href="{% url 'sports' my_username='x' %}">Sports</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!--Single Category-->
+                <div class="col-12 col-sm-6 col-md-4 mt-4">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/others4.png' %});">
+                        <div class="catagory-content">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'others' my_username=user.username %}">Others</a>
+                            {% else %}
+                            <a href="{% url 'others' my_username='x' %}">Others</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Top Catagory Area End ##### -->
+
+    <!-- ##### CTA Area Start ##### -->
+    <div class="cta-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="cta-content bg-img background-overlay" style="background-image: url({% static 'img/bg-img/sell4.jpeg' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center; opacity:0.8;">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <div class="cta--text ml-5" style="margin-bottom: 50px;">
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'sellform' %}" class="btn active px-lg-5 justify-content-center sell-btn" style="margin-left:35px;">Sell Now</a>
+                                {% else %}
+                                <a href="{% url 'login' %}" class="btn active px-lg-5 justify-content-center sell-btn" style="margin-left:35px;">Sell Now</a>
+                                {% endif%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### CTA Area End ##### -->
+
+        <!-- ##### New Arrivals Area Start ##### -->
+        <section class="new_arrivals_area section-padding-80 clearfix">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-heading text-center">
+                            <h2>Latest Products</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="popular-products-slides owl-carousel">
+                            {% for s in sell %}
+                            <!--Single Product--> 
+                            <div class="single-product-wrapper">
+                            
+                                <!-- Product Image -->
+                                <div class="product-img">
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'single_product_details' my_id=s.id my_username=user.username %}">
+                                        <img src="{{s.img.url}}" alt="" style="height:300px; width:500px;opacity:0.8;">
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'single_product_details' my_id=s.id my_username='x' %}">
+                                        <img src="{{s.img.url}}" alt="" style="height:300px; width:500px;opacity:0.8;">
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                <!-- Product Description -->
+                                <div class="product-description" style="font-family: 'Ubuntu', sans-serif;">
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'single_product_details' my_id=s.id my_username=user.username %}">
+                                        <h4 style="color:#4e5661;">{{s.product_title}}</h4>
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'single_product_details' my_id=s.id my_username='x' %}">
+                                        <h4 style="color:#4e5661;">{{s.product_title}}</h4>
+                                    </a>
+                                    {% endif %}
+                                    <p class="product-price" style="font-size: 18px;color:#4e5661;" >₹ {{s.price}}</p>
+
+                                  
+    
+                                </div>
+                            </div>
+                              {% endfor %}  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+         <!--##### New Arrivals Area End ##### -->
+
+
+
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="{% static 'img/core-img/connect.png' %}" alt="" style="width:130px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="{% url 'event' %}">Events</a></li>
+                            <li><a href="#">FAQ's</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_social_area">
+                            <h6 style="color:white; margin-left:10px;">FOLLOW US</h6>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="{% static 'js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Plugins js -->
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <!-- Classy Nav js -->
+    <script src="{% static 'js/classy-nav.min.js' %}"></script>
+    <!-- Active js -->
+    <script src="{% static 'js/active.js' %}"></script>
+<!-- GetButton.io widget -->
+<!--<script type="text/javascript">
+    (function () {
+        var options = {
+            whatsapp: "+91-", // WhatsApp number
+            call_to_action: "Message us", // Call to action
+            position: "right", // Position may be 'right' or 'left'
+        };
+        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
+        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+    })();
+</script>-->
+<!-- /GetButton.io widget -->
+
+</body>
+
+</html>

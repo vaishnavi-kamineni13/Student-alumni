@@ -1,0 +1,298 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Events</title>
+
+    <!-- Title logo -->
+    <link rel="icon" href="{% static 'img/core-img/connectlogo.png' %}">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+    <!-- Laptop text font-->
+    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ##### Header Area Start ##### -->
+    <header class="header_area">
+        <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+            <!-- Classy Menu -->
+            <nav class="classy-navbar" id="essenceNav">
+                <!-- Logo -->
+                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width:130px;" alt=""></a>
+                <!-- Navbar Toggler -->
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+                <!-- Menu -->
+                <div class="classy-menu">
+                    <!-- close btn -->
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                    </div>
+                    <!-- Nav Start -->
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="{% url 'index' %}">Home</a></li>
+                            <li><a href="#">Products</a>
+                                
+                                <ul class="dropdown">
+                                    {% if user.is_authenticated %}
+                                    <li><a href="{% url 'books' my_username=user.username %}">Books</a></li>
+                                    <li><a href="{% url 'electronics' my_username=user.username %}">Electronic gadgets</a></li>
+                                    <li><a href="{% url 'stationery' my_username=user.username %}">Stationery</a></li>
+                                    <li><a href="{% url 'sports' my_username=user.username %}">Sports</a></li>
+                                    <li><a href="{% url 'others' my_username=user.username %}">Others</a></li>
+                                    {% else %}
+                                    <li><a href="{% url 'books' my_username='x' %}">Books</a></li>
+                                    <li><a href="{% url 'electronics' my_username='x' %}">Electronic gadgets</a></li>
+                                    <li><a href="{% url 'stationery' my_username='x' %}">Stationery</a></li>
+                                    <li><a href="{% url 'sports' my_username='x' %}">Sports</a></li>
+                                    <li><a href="{% url 'others' my_username='x' %}">Others</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            <li class="highligh"><a href="{% url 'event' %}">Events</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                        </ul>
+                    </div>
+                    <!-- Nav End -->
+                </div>
+
+            </nav>
+
+            <!-- Header Meta Data -->
+            <div class="header-meta d-flex clearfix justify-content-end">
+              <!-- {% if user.is_authenticated %}
+                {% for s in sign1 %}
+                {% if s.username == user.username %}
+                <div class="hello">
+                    <p style="text-align:center;">Hello,{{s.full_name}}</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}-->
+                <!-- Search Area -->
+                <!--<div class="search-area">
+                    <form action="#" method="post">
+                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
+                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </form>
+                </div>-->
+                <!-- Favourite Area -->
+                {% if user.is_authenticated %}
+                <div class="favourite-area">
+                    <a href="{% url 'favourites' direct='y' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
+                </div>
+                {% else %}
+                <div class="favourite-area">
+                    <a href="{% url 'login' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
+                </div>
+                {% endif %}
+                <!-- User Login Info -->
+                {% if user.is_authenticated %}
+                <div class="user-login-info">
+                    <div class="dropdown">
+                        <a href="#"><i class="fa fa-user mt-md-4" aria-hidden="true" style="font-size: 22px;"></i></a>
+                            <div class="dropdown-content" style="width:100px;">
+                                <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">Profile</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'requests' my_id=1 bool='x' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Requests</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'orders' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Orders</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'sold' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Items Sold</a>
+                                <hr style="margin-top:2px; margin-bottom:2px;">
+                                <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
+                            </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="user-login-info">
+                    <a href="{% url 'login' %}"><i class="fa fa-user-o" aria-hidden="true" style="font-size: 20px;"></i></a>
+                </div>
+                {% endif %}
+            </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+
+    
+
+    <!-- ##### Breadcumb Area Start ##### -->
+    <div class="breadcumb_area breadcumb-style-two bg-img" style="background-image: url({% static 'img/events-img/title.jpg' %}); background-size:cover; background-position:center center;">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="page-title text-center">
+                        <h2>Events</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Breadcumb Area End ##### -->
+
+    <!-- ##### Blog Wrapper Area Start ##### -->
+    <div class="blog-wrapper section-padding-80">
+        <div class="container">
+            {% for e in event1 %}
+            <div class="row justify-content-center">
+               
+                <!-- Single Blog Area -->
+                <div class="col-12 col-lg-8">
+                    <div class="single-blog-area mb-50">
+                        <img src="{{e.img.url}}"alt="" style="background-size: cover; background-position:fixed; width: 700px; height:500px;">
+                    </div>
+                </div>
+                {% if e.end_date %}
+                        {% if e.venue %}
+                        <div class="col-12 col-lg-4">
+                            <h1 style="font-family: 'Kalam', cursive; color:#787878;">{{e.event_name}}</h2>
+                            <div class="fo" style="font-family: 'Josefin Sans', sans-serif;">
+                                <p style="font-size:25px; color:black; line-height:32px;"><strong>Start Date :</strong> {{e.start_date}}</p>
+                                <p style="font-size:25px; color:black; line-height:32px;"><strong>End Date :</strong> {{e.end_date}}</p>
+                                <p style="font-size:25px; color:black; line-height:32px;"><strong>Link :</strong> <a href="{{e.link}}" style="font-size: 20px;text-decoration:underline; color:#3366bb">{{e.link}}</a></p>
+                                <p style="font-size:25px; color:black; line-height:32px;"><strong>Venue :</strong> {{e.venue}}</p>
+                                <p style="font-size:25px; color:black; line-height:32px;"><i class="fa fa-phone" aria-hidden="true" style="color: green;"></i> {{e.number}}</p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12 col-lg-4">
+                            <h1 style="font-family: 'Courgette', cursive; color:#787878;">{{e.event_name}}</h2>
+                            <div class="fo" style="font-family: 'Josefin Sans', sans-serif;">
+                                <p style="font-size:25px; color:black; line-height:40px;"><strong>Start Date :</strong> {{e.start_date}}</p>
+                                <p style="font-size:25px; color:black; line-height:40px;"><strong>End Date :</strong> {{e.end_date}}</p>
+                                <p style="font-size:25px; color:black; line-height:40px;"><strong>Link :</strong> <a href="{{e.link}}" style="font-size: 20px;text-decoration:underline; color:#3366bb">{{e.link}}</a></p>
+                                <p style="font-size:25px; color:black; line-height:40px;"><i class="fa fa-phone" aria-hidden="true" style="color: green;"></i> {{e.number}}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                {% else %}
+                    {% if e.venue %}
+                    <div class="col-12 col-lg-4">
+                        <h1 style="font-family: 'Kalam', cursive; color:#787878;">{{e.event_name}}</h2>
+                        <div class="fo" style="font-family: 'Josefin Sans', sans-serif;">
+                            <p style="font-size:25px; color:black; line-height:40px;"><strong>Start Date :</strong> {{e.start_date}}</p>
+                            <p style="font-size:25px; color:black; line-height:40px;"><strong>Link :</strong> <a href="{{e.link}}" style="font-size: 20px;text-decoration:underline; color:#3366bb">{{e.link}}</a></p>
+                            <p style="font-size:25px; color:black; line-height:40px;"><strong>Venue :</strong> {{e.venue}}</p>
+                            <p style="font-size:25px; color:black; line-height:40px;"><i class="fa fa-phone" aria-hidden="true" style="color: green;"></i> {{e.number}}</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-12 col-lg-4">
+                        <h1 style="font-family: 'Kalam', cursive; color:#787878;">{{e.event_name}}</h2>
+                        <div class="fo" style="font-family: 'Josefin Sans', sans-serif;">
+                            <p style="font-size:25px; color:black; line-height:50px;"><strong>Start Date :</strong> {{e.start_date}}</p>
+                            <p style="font-size:25px; color:black; line-height:50px;"><strong>Link :</strong> <a href="{{e.link}}" style="font-size: 20px;text-decoration:underline; color:#3366bb">{{e.link}}</a></p>
+                            <p style="font-size:25px; color:black; line-height:50px;"><i class="fa fa-phone" aria-hidden="true" style="color: green;"></i> {{e.number}}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endif %}
+
+
+                <div class="col-12">
+                    <p style="color:black; font-size:22px; font-family: 'Josefin Sans', sans-serif;">{{e.description}}
+                    </p>
+                </div>
+            </div>
+            <hr style="border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); margin-bottom:50px;">
+            {% endfor %}
+            <div class="event" style="text-align: center; margin-top:50px;">
+                <p style="font-size: 40px; color:black; font-weight:800; font-family: 'Sahitya', serif;">Want to post your event ??</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'eventRegistration' %}" class="btn btn-lg pr-4 pl-4 pt-3 pb-3">Click Here</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-lg pr-4 pl-4 pt-3 pb-3">Click Here</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <!-- ##### Blog Wrapper Area End ##### -->
+
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area d-flex mb-30">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="#"><img src="{% static 'img/core-img/connect.png' %}" alt="" style="width:130px;"></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area mb-30">
+                        <ul class="footer_widget_menu">
+                            <li><a href="{% url 'event' %}">Events</a></li>
+                            <li><a href="#">FAQ's</a></li>
+                            <li><a href="{% url 'about' %}">About</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-md-6">
+                    <div class="single_widget_area">
+                        <div class="footer_social_area">
+                            <h6 style="color:white; margin-left:10px;">FOLLOW US</h6>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <p>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="{% static 'js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Plugins js -->
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <!-- Classy Nav js -->
+    <script src="{% static 'js/classy-nav.min.js' %}"></script>
+    <!-- Active js -->
+    <script src="{% static 'js/active.js' %}"></script>
+
+</body>
+
+</html>
