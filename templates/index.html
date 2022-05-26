@@ -11,7 +11,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>Connect</title>
+    <title>Home</title>
 
     <!-- Title logo -->
     <link rel="icon" href="{% static 'img/core-img/connectlogo.png' %}">
@@ -24,6 +24,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <style>
+        div span {
+            background-color: black;
+            padding-top:5px;
+            padding-bottom: 5px;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -33,7 +41,6 @@
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width:130px;" alt=""></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -45,26 +52,65 @@
                         <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                     </div>
                     <!-- Nav Start -->
-                    <div class="classynav">
+                    <div class="classynav" style="width: 600px;">
                         <ul>
                             <li class="highligh"><a href="{% url 'index' %}">Home</a></li>
-                            <li><a href="#">Products</a>
+                            <li ><a href="#">Companies</a>
                                 <ul class="dropdown">
-                                    {% if user.is_authenticated %}
-                                    <li><a href="{% url 'books' my_username=user.username %}">Books</a></li>
-                                    <li><a href="{% url 'electronics' my_username=user.username %}">Electronic gadgets</a></li>
-                                    <li><a href="{% url 'stationery' my_username=user.username %}">Stationery</a></li>
-                                    <li><a href="{% url 'sports' my_username=user.username %}">Sports</a></li>
-                                    <li><a href="{% url 'others' my_username=user.username %}">Others</a></li>
-                                    {% else %}
-                                    <li><a href="{% url 'books' my_username='x' %}">Books</a></li>
-                                    <li><a href="{% url 'electronics' my_username='x' %}">Electronic gadgets</a></li>
-                                    <li><a href="{% url 'stationery' my_username='x' %}">Stationery</a></li>
-                                    <li><a href="{% url 'sports' my_username='x' %}">Sports</a></li>
-                                    <li><a href="{% url 'others' my_username='x' %}">Others</a></li>
-                                    {% endif %}
+                                    <div class="row">
+                                        {% if user.is_authenticated %}
+                                        <div class="column" style="margin-left: 10px;">
+                                          <a href="{% url 'amazon' %}">Amazon</a>
+                                          <a href="{% url 'deloitte' %}">Deloitte</a>
+                                          <a href="{% url 'infosys' %}">Infosys</a>
+                                          <a href="{% url 'accenture' %}">Accenture</a>
+                                          <a href="{% url 'atlassian' %}">Atlassian</a>
+                                          <a href="{% url 'cognizant' %}">Cognizant</a>
+                                          <a href="{% url 'capgemini' %}">Capgemini</a>
+                                          <a href="{% url 'accolite' %}">Accolite</a>
+                                          <a href="{% url 'statestreet' %}">StateStreet</a>
+                                          <a href="{% url 'others' %}">Others</a>
+                                        </div>
+                                        <div class="column">
+                                          <a href="{% url 'jpmc' %}">JPMC</a>
+                                          <a href="{% url 'tcs' %}">TCS</a>
+                                          <a href="{% url 'wipro' %}">Wipro</a>
+                                          <a href="{% url 'lti' %}">LTI</a>
+                                          <a href="{% url 'ncr' %}">NCR</a>
+                                          <a href="{% url 'factset' %}">Factset</a>
+                                          <a href="{% url 'acs' %}">ACS</a>
+                                          <a href="{% url 'f5' %}">F5</a>
+                                          <a href="{% url 'dbs' %}">DBS</a>
+                                        </div>
+                                        {% else %}
+                                        <div class="column" style="margin-left: 10px;">
+                                            <a href="{% url 'login' %}">Amazon</a>
+                                            <a href="{% url 'login' %}">Deloitte</a>
+                                            <a href="{% url 'login' %}">Infosys</a>
+                                            <a href="{% url 'login' %}">Accenture</a>
+                                            <a href="{% url 'login' %}">Atlassian</a>
+                                            <a href="{% url 'login' %}">Cognizant</a>
+                                            <a href="{% url 'login' %}">Capgemini</a>
+                                            <a href="{% url 'login' %}">Accolite</a>
+                                            <a href="{% url 'login' %}">StateStreet</a>
+                                            <a href="{% url 'login' %}">Others</a>
+                                          </div>
+                                          <div class="column">
+                                            <a href="{% url 'login'%}">JPMC</a>
+                                            <a href="{% url 'login' %}">TCS</a>
+                                            <a href="{% url 'login' %}">Wipro</a>
+                                            <a href="{% url 'login' %}">LTI</a>
+                                            <a href="{% url 'login' %}">NCR</a>
+                                            <a href="{% url 'login' %}">Factset</a>
+                                            <a href="{% url 'login' %}">ACS</a>
+                                            <a href="{% url 'login' %}">F5</a>
+                                            <a href="{% url 'login'%}">DBS</a>
+                                          </div>
+                                          {% endif %}
+                                      </div>
                                 </ul>
                             </li>
+                            <li><a href="{% url 'technical' %}">Technical Forum</a></li>
                             <li><a href="{% url 'event' %}">Events</a></li>
                             <li><a href="{% url 'about' %}">About</a></li>
                         </ul>
@@ -76,45 +122,17 @@
 
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
-              <!-- {% if user.is_authenticated %}
-                {% for s in sign1 %}
-                {% if s.username == user.username %}
-                <div class="hello">
-                    <p style="text-align:center;">Hello,{{s.full_name}}</p>
-                </div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}-->
-                <!-- Search Area -->
-               <!-- <div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
-                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </form>
-                </div>-->
                 <!-- Favourite Area -->
-                {% if user.is_authenticated %}
-                <div class="favourite-area">
-                    <a href="{% url 'favourites' direct='y' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
-                </div>
-                {% else %}
-                <div class="favourite-area">
-                    <a href="{% url 'login' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
-                </div>
-                {% endif %}
+                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width: 150px; margin-top:20px;"></a>
                 <!-- User Login Info -->
                 {% if user.is_authenticated %}
                 <div class="user-login-info">
                     <div class="dropdown">
                         <a href="#"><i class="fa fa-user mt-md-4" aria-hidden="true" style="font-size: 22px;"></i></a>
                             <div class="dropdown-content" style="width:100px;">
-                                <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">My Profile</a>
+                                <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">Profile</a>
                                 <hr style="margin-top:2px; margin-bottom:2px;">
-                                <a href="{% url 'requests' my_id=1 bool='x' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Requests</a>
-                                <hr style="margin-top:2px; margin-bottom:2px;">
-                                <a href="{% url 'orders' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Orders</a>
-                                <hr style="margin-top:2px; margin-bottom:2px;">
-                                <a href="{% url 'sold' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Items Sold</a>
+                                <a href="{% url 'discussions' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Discussions</a>
                                 <hr style="margin-top:2px; margin-bottom:2px;">
                                 <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
                             </div>
@@ -134,7 +152,7 @@
     <!--##### Welcome Area Start #####--> 
     <div class="row">
         <div class="col-12">
-            <section class="welcome_area bg-img background-overlay img-fluid img-thumbnail" style="background-image: url({% static 'img/bg-img/hands.png' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center; "></section>
+            <section class="welcome_area bg-img background-overlay img-fluid img-thumbnail" style="background-image: url({% static 'img/bg-img/alumni3.jpg' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center; "></section>
 
         </div>
     </div>
@@ -155,60 +173,60 @@
             <div class="row justify-content-center">
                 <!-- Single Catagory -->
                 <div class="col-12 col-sm-6 col-md-4 mt-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/books.jpg' %});">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/a.jpg' %});">
                         <div class="catagory-content">
                             {% if user.is_authenticated %}
-                            <a href="{% url 'books' my_username=user.username %}">Books</a>
+                            <a href="{% url 'amazon' %}">Amazon</a>
                             {% else %}
-                            <a href="{% url 'books' my_username='x' %}">Books</a>
+                            <a href="{% url 'login' %}">Amazon</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 <!-- Single Catagory -->
                 <div class="col-12 col-sm-6 col-md-4 mt-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/electronic.jpg' %});">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/jpmc1.jpg' %});">
                         <div class="catagory-content">
                             {% if user.is_authenticated %}
-                            <a href="{% url 'electronics' my_username=user.username %}" style="text-align: center;">Electronic gadgets</a>                     
+                            <a href="{% url 'jpmc' %}" style="text-align: center;">JP Morgan Chase & Co</a>                     
                             {% else %}
-                            <a href="{% url 'electronics' my_username='x' %}" style="text-align: center;">Electronic gadgets</a>                     
+                            <a href="{% url 'login' %}" style="text-align: center;">JP Morgan Chase & Co</a>                     
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 <!-- Single Catagory -->
                 <div class="col-12 col-sm-6 col-md-4 mt-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/stationary.jpg' %});">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/deloitte.jpg' %});">
                         <div class="catagory-content">
                             {% if user.is_authenticated %}
-                            <a href="{% url 'stationery' my_username=user.username %}">Stationery</a>
+                            <a href="{% url 'deloitte' %}">Deloitte</a>
                             {% else %}
-                            <a href="{% url 'stationery' my_username='x' %}">Stationery</a>
+                            <a href="{% url 'login' %}">Deloitte</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 <!--Single Category-->
                 <div class="col-12 col-sm-6 col-md-4 mt-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/sports.jpg' %});">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/accenture.jpg' %});">
                         <div class="catagory-content">
                             {% if user.is_authenticated %}
-                            <a href="{% url 'sports' my_username=user.username %}">Sports</a>
+                            <a href="{% url 'accenture' %}">Accenture</a>
                             {% else %}
-                            <a href="{% url 'sports' my_username='x' %}">Sports</a>
+                            <a href="{% url 'login' %}">Accenture</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 <!--Single Category-->
                 <div class="col-12 col-sm-6 col-md-4 mt-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/others4.png' %});">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url({% static 'img/bg-img/tcs.jpg' %});">
                         <div class="catagory-content">
                             {% if user.is_authenticated %}
-                            <a href="{% url 'others' my_username=user.username %}">Others</a>
+                            <a href="{% url 'others'%}">TCS</a>
                             {% else %}
-                            <a href="{% url 'others' my_username='x' %}">Others</a>
+                            <a href="{% url 'login'%}">TCS</a>
                             {% endif %}
                         </div>
                     </div>
@@ -216,87 +234,157 @@
             </div>
         </div>
     </div>
-    <!-- ##### Top Catagory Area End ##### -->
+    <!-- ##### Top Catagory Area End ##### --
 
     <!-- ##### CTA Area Start ##### -->
     <div class="cta-area">
+        {% for s in sign2 %}
+        {% if user.username == s.username %}
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="cta-content bg-img background-overlay" style="background-image: url({% static 'img/bg-img/sell4.jpeg' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center; opacity:0.8;">
+                    <div class="cta-content bg-img background-overlay" style="background-image: url({% static 'img/bg-img/qn3.png' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center;">
                         <div class="h-100 d-flex align-items-center justify-content-center">
-                            <div class="cta--text ml-5" style="margin-bottom: 50px;">
+                            <div class="cta--text ml-5">
                                 {% if user.is_authenticated %}
-                                <a href="{% url 'sellform' %}" class="btn active px-lg-5 justify-content-center sell-btn" style="margin-left:35px;">Sell Now</a>
+                                <a href="{% url 'questionform' %}" class="btn px-lg-5 justify-content-center sell-btn" style="margin-left:35px; margin-top:30px; color:black; background-color: #bd1313;">Click Here</a>
                                 {% else %}
-                                <a href="{% url 'login' %}" class="btn active px-lg-5 justify-content-center sell-btn" style="margin-left:35px;">Sell Now</a>
-                                {% endif%}
+                                <a href="{% url 'login' %}" class="btn px-lg-5 justify-content-center sell-btn" style="margin-left:35px;margin-top:30px; color:black; background-color: #bd1313;">Click Here</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="cta-content bg-img background-overlay" style="background-image: url({% static 'img/bg-img/tech1.jpg' %}); background-size : 100% 100%; background-repeat:no-repeat; background-position:center center;margin-top:40px;">
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <div class="cta--text ml-5">
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'techform' %}" class="btn px-lg-5 justify-content-center sell-btn" style="margin-left:45px; margin-top: 150px; color:black; background-color: #cf80c7">Click Here</a>
+                                {% else %}
+                                <a href="{% url 'login' %}" class="btn px-lg-5 justify-content-center sell-btn" style="margin-left:45px; margin-top: 150px; color:black; background-color: #cf80c7">Click Here</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
     </div>
+    <div class="cta-area">
+        {% for se in sign3 %}
+        {% if user.username == se.username %}
+        <h1 style="padding-bottom: 40px; padding-top:40px; text-align:center;">&#160 &#160 Questions For You</h1>
+        {% for q in qn1 %}
+
+        {% if q.companyname1 == se.company_name and q.companyname1 or q.companyname1 == se.company_name1 and q.companyname1 or q.companyname1 == se.company_name2 and q.companyname1 or q.companyname1 == se.company_name3 and q.companyname1 %}
+        <div style="background-color:#d2d6d6; padding-bottom:15px; padding-top:20px; margin-left:40px;margin-right:40px; margin-bottom:15px; font-family: 'Ubuntu', sans-serif; font-weight:900; border:gray solid 1px; border-radius:8px;" class="row">
+            <div class="col-12" style="font-size: 20px;padding-bottom: 15px; text-align: center;">{{q.companyname1}}</div>
+            <div class="col-12" style="font-size: 20px;padding-bottom: 15px;"><pre>{{q.question}}</pre></div>
+            <div class="col-6 col-md-3" style="font-size: 15px;">Asked By : {{q.username}}</div>
+            <div class="col-6 col-md-3 " style="font-size: 15px; margin-right: 280px;">{{q.full_name}}</div>
+            <div class="col-6 col-md-3 style="margin-left:50px; padding-left:50px;">
+            <div class="col-12"> <a href="#" class="btn btn-success" style="float: right;" onclick="document.getElementById('{{q.id}}').style.display='block'">Answer</a></div>     
+            <div class="col-12" style="position:relative;right:875px; top:10px;">
+                <form action="/" method="post" id="{{q.id}}">
+                    {% csrf_token %}
+                    <h1></h1>
+                    <input type="text" name="username" value="{{user.username}}" style="display: none;"/>
+                    {% for s in sign3 %}
+                    {% if s.username == user.username %}
+                    <input type="text" name="full_name" value="{{s.full_name}}" style="display: none;"/>
+                    {% endif %}
+                    {% endfor %}
+                    <input type="text" name="student_username" value="{{q.username}}" style="display: none;"/>
+                    <input type="text" name="company" value="{{q.companyname1}}" style="display: none;"/>
+                    <input type="text" name="question" value="{{q.question}}" style="display: none;"/>
+                    <textarea rows="5" cols="150" placeholder="Enter Your answer" name="answer" required style="margin-right: 150px;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Post</button>
+                    <button type="button" class="btn btn-danger cancel" style="margin-left: 10px;" onclick="document.getElementById('{{q.id}}').style.display='none'">Close</button>
+                  </form>
+            </div>
+            {% endif %}
+        </div>
+        
+
+       {% if q.companyname2 == se.company_name and q.companyname2 or q.companyname2 == se.company_name1 and q.companyname2 or q.companyname2 == se.company_name2 and q.companyname2 or q.companyname2 == se.company_name3 and q.companyname2 %}
+        <div style="background-color:#d2d6d6; padding-bottom:15px; padding-top:20px; margin-left:40px;margin-right:40px; margin-bottom:15px; font-family: 'Ubuntu', sans-serif; font-weight:900; border:gray solid 1px; border-radius:8px;" class="row">
+            <div class="col-12" style="font-size: 20px;padding-bottom: 15px; text-align: center;">{{q.companyname2}}</div>
+            <div class="col-12" style="font-size: 20px;padding-bottom: 15px;"><pre>{{q.question}}</pre></div>
+            <div class="col-6 col-md-3" style="font-size: 15px;">{{q.username}}</div>
+            <div class="col-6 col-md-3 " style="font-size: 15px; margin-right: 280px;">{{q.full_name}}</div>
+            <div class="col-6 col-md-3" style="margin-left:50px; padding-left:50px;">
+            <div class="col-12"> <a href="#" class="btn btn-success" style="float: right;" onclick="document.getElementById('{{q.id}}').style.display='block'">Answer</a></div>     
+            <div class="col-12" style="position:relative;right:875px; top:10px;">
+                <form action="/" method="post" id="{{q.id}}">
+                    {% csrf_token %}
+                    <input type="text" name="username" value="{{user.username}}" style="display: none;"/>
+                    {% for s in sign3 %}
+                    {% if s.username == user.username %}
+                    <input type="text" name="full_name" value="{{s.full_name}}" style="display: none;"/>
+                    {% endif %}
+                    {% endfor %}
+                    <input type="text" name="student_username" value="{{q.username}}" style="display: none;"/>
+                    <input type="text" name="company" value="{{q.companyname2}}" style="display: none;"/>
+                    <input type="text" name="question" value="{{q.question}}" style="display: none;"/>
+                    <textarea rows="5" cols="150" placeholder="Enter Your answer" name="answer" required style="margin-right: 150px;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 10px;">Post</button>
+                    <button type="button" class="btn btn-danger cancel" onclick="document.getElementById('{{q.id}}').style.display='none'" style="margin-left: 10px;">Close</button>
+                  </form>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% endfor %}
+
+        {% endif %}
+        {% endfor %}
+    </div>
+
     <!-- ##### CTA Area End ##### -->
 
         <!-- ##### New Arrivals Area Start ##### -->
-        <section class="new_arrivals_area section-padding-80 clearfix">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section-heading text-center">
-                            <h2>Latest Products</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="popular-products-slides owl-carousel">
-                            {% for s in sell %}
-                            <!--Single Product--> 
-                            <div class="single-product-wrapper">
-                            
-                                <!-- Product Image -->
-                                <div class="product-img">
-                                    {% if user.is_authenticated %}
-                                    <a href="{% url 'single_product_details' my_id=s.id my_username=user.username %}">
-                                        <img src="{{s.img.url}}" alt="" style="height:300px; width:500px;opacity:0.8;">
-                                    </a>
-                                    {% else %}
-                                    <a href="{% url 'single_product_details' my_id=s.id my_username='x' %}">
-                                        <img src="{{s.img.url}}" alt="" style="height:300px; width:500px;opacity:0.8;">
-                                    </a>
-                                    {% endif %}
-                                </div>
-                                <!-- Product Description -->
-                                <div class="product-description" style="font-family: 'Ubuntu', sans-serif;">
-                                    {% if user.is_authenticated %}
-                                    <a href="{% url 'single_product_details' my_id=s.id my_username=user.username %}">
-                                        <h4 style="color:#4e5661;">{{s.product_title}}</h4>
-                                    </a>
-                                    {% else %}
-                                    <a href="{% url 'single_product_details' my_id=s.id my_username='x' %}">
-                                        <h4 style="color:#4e5661;">{{s.product_title}}</h4>
-                                    </a>
-                                    {% endif %}
-                                    <p class="product-price" style="font-size: 18px;color:#4e5661;" >₹ {{s.price}}</p>
+        <div class="cta-area">
+            <h1 style="padding-bottom: 40px; padding-top:40px; text-align:center;">&#160 &#160 Trending Discussions</h1>
+            {% for qn, ans_list in d.items %}
+            {% for q in ans_list %} 
+            {% if forloop.first %}
+                <div style="background-color:#d2d6d6; padding-bottom:15px; padding-top:20px; margin-left:40px;margin-right:40px; margin-bottom:15px; margin-top:20px; font-family: 'Ubuntu', sans-serif; font-weight:900; border:gray solid 1px; border-radius:8px;" class="row">
+                <div class="col-12" style="font-size: 20px;padding-bottom: 15px; text-align: center;">{{q.company}}</div>
+                <div class="col-12" style="font-size: 20px;padding-bottom: 15px;">{{qn}}</div>
+                <div class="col-6 col-md-3" style="font-size: 15px;">Asked By : {{q.student_username}}</div>
+                {% for s1 in sign2 %}
+                {% if s1.username == q.student_username %}
+                <div class="col-6 col-md-3 " style="font-size: 15px; margin-right: 280px;">{{s1.full_name}}</div>
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+                <div class="col-12" style="margin-top: 10px; color:white; font-size:large; top:25px; "><span>&#160 Answer : &#160</span></div>
+                <div class="col-12" style="font-size: 20px; top:35px; padding-bottom: 15px; margin-bottom:20px;"><pre>{{q.answer}}</pre></div>
+                <div class="col-6 col-md-3" style="font-size: 15px; margin-top:10px;">Answered By : {{q.username}}</div>
+                {% for s2 in sign3 %}
+                {% if s2.username == q.username %}
+                <div class="col-6 col-md-3 " style="font-size: 15px; margin-right: 280px; margin-top:10px;">{{s2.full_name}}</div>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+</div> 
+{% endfor %}
+        </div>
 
-                                  
-    
-                                </div>
-                            </div>
-                              {% endfor %}  
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-         <!--##### New Arrivals Area End ##### -->
+        <!--##### New Arrivals Area End ##### -->
+         
+         <!--<button class="open-button" onclick="openForm()">Open Form</button>-->
+         
 
+         
+   
 
 
     <!-- ##### Footer Area Start ##### -->
@@ -331,10 +419,10 @@
                     <div class="single_widget_area">
                         <div class="footer_social_area">
                             <h6 style="color:white; margin-left:10px;">FOLLOW US</h6>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                            <a href="https://www.facebook.com/vnralums/" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="https://instagram.com/vnrvjietalumni?utm_medium=copy_link" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="https://twitter.com/vnrvjieto/" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="https://www.youtube.com/c/VNRVJIETChannel" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -353,6 +441,16 @@
         </div>
     </footer>
     <!-- ##### Footer Area End ##### -->
+    <script>
+        function openForm() {
+          document.getElementById("myForm").style.display = "block";
+        }
+        
+        function closeForm() {
+            this.form.getElementById("myForm").style.display ="none";
+        }
+        </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="{% static 'js/jquery/jquery-2.2.4.min.js' %}"></script>
@@ -380,6 +478,7 @@
         var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
     })();
 </script>-->
+
 <!-- /GetButton.io widget -->
 
 </body>

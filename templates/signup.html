@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Sign Up Form</title>
+	<title>Student Sign Up</title>
 	<link rel="icon" href="{% static 'img/core-img/connectlogo.png' %}">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,90 +36,24 @@
 <body>
 		<div class="limiter d-flex justify-content-center">
 			<div class="wrap-login100">
-
-					<form class="login100-form validate-form" action="signup" method="post">
-						{% csrf_token %}
-					<span class="login100-form-title p-b-25" style="text-align: center;">
+					<span class="login100-form-title p-b-8" style="text-align: center;">
 						Sign Up
 					</span>
-					<div>
-						{% for message in messages %}
-						<h3 style="font-weight:400; font-size:20px; color:#c80000;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{message}}</h3>
-						{% endfor %}
-	
-					</div>
-
-
-
-					<div class="wrap-input100 validate-input" style="padding-top: 45px;" data-validate="Name is required">
-						<span class="label-input100">Full Name</span>
-						<input class="input100" type="text" name="full_name" placeholder="Name">
-						<span class="focus-input100"></span>
-					</div>
-
-					
-					<div class="wrap-input100 validate-input" data-validate="Username is required">
-						<span class="label-input100">Username</span>
-						<input class="input100" type="text" name="username" placeholder="Roll Number">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<span class="label-input100">Email</span>
-						<input class="input100" type="email" name="email" placeholder="Email address">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Valid number is required">
-						<span class="label-input100">Mobile Number</span>
-						<input class="input100" type="text" name="mobile_number" placeholder="Mobile Number">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Password is required">
-						<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="password1" placeholder="*************">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Repeat Password is required">
-						<span class="label-input100">Confirm Password</span>
-						<input class="input100" type="password" name="password2" placeholder="*************">
-						<span class="focus-input100"></span>
-					</div>
-
-				<!--	<div class="flex-m w-full p-b-33">
-						<div class="contact100-form-checkbox">
-							<input class="input-checkbox100" id="ckb1" type="checkbox" name="checkbox" required>
-							<label class="label-checkbox100" for="ckb1">
-								<span class="txt1">
-									I agree to the
-									<a href="#" class="txt2 hov1">
-										Terms of User
-									</a>
-								</span>
-							</label>
-						</div>
-
-						
-					</div>-->
 
 					<div class="container-login100-form-btn">
-						<div class="wrap-login100-form-btn">
+						<div style="margin-bottom:50px;"class="wrap-login100-form-btn">
 							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn" type="submit">
-								Sign Up
-							</button>
-						</div>
-
-						<a href="{% url 'login' %}" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
-							Login
-							<i class="fa fa-long-arrow-right m-l-5"></i>
-						</a>
-					</div></div>
-				
-				</form>
-
+							<a class="login100-form-btn" href="{% url 'signupstudent' %}">
+								Student Sign Up
+                            </a>
+					    </div>
+						<div style="margin-top: 50px;" class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<a class="login100-form-btn" href="{% url 'signupalumni' %}">
+								Alumni Sign Up
+                            </a>
+					    </div>
+                    </div>
 			</div>
 		</div>
 

@@ -1,20 +1,63 @@
+import email
 from django.shortcuts import render,redirect
-from accounts.models import Signup
-from .models import Request,Orders
-from pages.models import Books,Electronics,Stationery,Sports,Others,Favourites
-from forms.models import Sellform
-from pages.views import favourite_list
+from accounts.models import Signupstudent,Signupalumni
+from forms.models import Questionform,Answerform,Techansform,Techform
 from django.http import HttpResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from passlib.hash import django_pbkdf2_sha256 as handler
+from django.db.models import Q
+from django.core.mail import send_mail
 # Create your views here.
 def index(request):
-    sell=Sellform.objects.all()[::-1][:10]
-    return render(request,"index.html",{'sell':sell})
+    if request.method == 'POST':
+        username=request.POST['username']
+        student_username=request.POST['student_username']
+        full_name=request.POST['full_name']
+        question=request.POST['question']
+        answer=request.POST['answer']
+        company=request.POST['company']
+        Answerform.objects.create(username=username,student_username=student_username,full_name=full_name,company=company,question=question,answer=answer)
+        x=Signupstudent.objects.filter(username=student_username)
+        l=x.values('email')
+        y=[]
+        for each in l:
+            y.append(each['email'])
+        send_mail(
+        'Here is your answer from '+full_name,
+        "Your Question : \n"+question+"\n \n \nAnswer: \n"+answer,
+        'connect1822@gmail.com',
+        y,
+        fail_silently=False,
+    )
+        return redirect('/')
+    else:
+        sign2=Signupstudent.objects.all()
+        sign3=Signupalumni.objects.all()
+        qn=Questionform.objects.all()[::-1]
+        ans = Answerform.objects.all().order_by('question')
+        ans1=Answerform.objects.all()
+        d = {}
+        for a in ans:
+            current_key = a.question  # the item's date
+            d.setdefault(current_key, []).append(a)
+        qn1=[]
+        current_user = request.user
+        for q in qn:
+            flag=0
+            for a in ans1:
+                if q.question == a.question and a.username == current_user.username:
+                    flag=1
+                    break
+            if flag==0:
+                qn1.append(q)
+        #print('---',sign3,'----')
+        return render(request,"index.html",{'sign2':sign2,'sign3':sign3,'qn':qn,'ans':ans,'d':d,'qn1':qn1})
+
 def profile(request):
-    sign1=Signup.objects.all()
-    return render(request,"profile.html",{'sign1':sign1})
+    sign2=Signupstudent.objects.all()
+    sign3=Signupalumni.objects.all()
+    return render(request,"profile.html",{'sign2':sign2,'sign3':sign3})
 def password(request):
     if request.method=='POST':
         username=request.POST['username']
@@ -23,7 +66,7 @@ def password(request):
         password3=request.POST['password3']
 
         user=auth.authenticate(username=username,password=password1)
-        s=Signup.objects.get(username=username)
+        s=Signupstudent.objects.get(username=username)
         u = User.objects.get(username=username)
         if user is None:
             messages.info(request,'Password is incorrect')
@@ -41,109 +84,96 @@ def password(request):
                 return redirect('password')
     else:
         return render(request,"password.html")
-def single_product_details(request,my_id,my_username):
-    if my_username =='x':
-        x=Sellform.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        return render(request,'single_product_details.html',{'x':x,'y':y})
-    else:
-        x=Sellform.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        l=favourite_list(my_username,x.category)
-        return render(request,'single_product_details.html',{'x':x,'y':y,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-"""def x():
-    x=Sellform.objects.get(id=my_id)
-    y=x.username
-    u=username
-    Request.objects.create_user(y=y,u,pproduct_title)"""
-def requests(request,my_id,bool):
+def password1(request):
     if request.method=='POST':
-        pt=request.POST['pt']
-        uid=request.POST['uid']
-        #img=request.FILES['img']
-        price=request.POST['price']
-        sid=request.POST['sid']
-        cat=request.POST['cat']
+        username=request.POST['username']
+        password1=request.POST['password1']
+        password2=request.POST['password2']
+        password3=request.POST['password3']
 
-        if cat=='Books':
-            b1=Books.objects.get(product_title=pt,price=price)
-            img=b1.img
-        elif cat=='Electronics':
-            e1=Electronics.objects.get(product_title=pt,price=price)
-            img=e1.img
-        elif cat=='Stationery':
-            s1=Stationery.objects.get(product_title=pt,price=price)
-            img=s1.img
-        elif cat=='Sports':
-            sp1=Sports.objects.get(product_title=pt,price=price)
-            img=sp1.img
+        user=auth.authenticate(username=username,password=password1)
+        s=Signupalumni.objects.get(username=username)
+        u = User.objects.get(username=username)
+        if user is None:
+            messages.info(request,'Password is incorrect')
+            return redirect('password1')
         else:
-            o1=Others.objects.get(product_title=pt,price=price)
-            img=o1.img
-        if uid==sid:
-            messages.info(request,'You Are The Seller !!')
-            return redirect('requests',bool='x',my_id=1)
-        else:
-            if Request.objects.filter(seller_username=sid,buyer_username=uid,img=img,price=price,product_title=pt,category=cat).exists():
-                messages.info(request,'Request already sent')
+            if password2==password3:
+                h = handler.hash(password2)
+                u.password=h
+                u.save()
+                s.password=password2
+                s.save()
+                return redirect('/')
             else:
-                Request.objects.create(seller_username=sid,buyer_username=uid,product_title=pt,img=img,price=price,category=cat)
-            return redirect('requests',bool='x',my_id=1)
+                messages.info(request,'passwords doesnt match')
+                return redirect('password1')
     else:
-        if bool=='Accept':
-            r2=Request.objects.get(id=my_id)
-            Orders.objects.create(seller_username=r2.seller_username,buyer_username=r2.buyer_username,img=r2.img,price=r2.price,product_title=r2.product_title,category=r2.category)
-            s2=Sellform.objects.get(username=r2.seller_username,img=r2.img,product_title=r2.product_title,price=r2.price)
-            if r2.category=='Books':
-                b1=Books.objects.get(username=r2.seller_username,img=r2.img,product_title=r2.product_title,price=r2.price)
-                b1.delete()
-            elif r2.category=='Electronics':
-                e1=Electronics.objects.get(username=r2.seller_username,img=r2.img,product_title=r2.product_title,price=r2.price)
-                e1.delete()
-            elif r2.category=='Stationery':
-                s1=Stationery.objects.get(username=r2.seller_username,img=r2.img,product_title=r2.product_title,price=r2.price)
-                s1.delete()
-            elif r2.category=='Sports':
-                sp1=Sports.objects.get(username=r2.seller_username,img=r2.img,product_title=r2.product_title,price=r2.price)
-                sp1.delete()
-            else:
-                o1=Others.objects.get(username=r2.seller_username,img=r2.img,product_title=r2.product_title,price=r2.price)
-                o1.delete()
-            f1=Favourites.objects.all()
-            for f in f1:
-                if f.username ==r2.seller_username and f.product_title== r2.product_title:
-                    f.delete()
-            s2.delete()
-            r2.delete()
-            r1=Request.objects.all()
-            request_seller_list=[]
-            request_buyer_list=[]
-            for r in r1:
-                request_seller_list.append(r.seller_username)
-                request_buyer_list.append(r.buyer_username)
-            return render(request,"requests.html",{'r1':r1,'request_seller_list':request_seller_list,'request_buyer_list':request_buyer_list})
-        elif bool=='Decline':
-            r2=Request.objects.get(id=my_id)
-            r2.delete()
-            r1=Request.objects.all()
-            request_seller_list=[]
-            request_buyer_list=[]
-            for r in r1:
-                request_seller_list.append(r.seller_username)
-                request_buyer_list.append(r.buyer_username)
-            return render(request,"requests.html",{'r1':r1,'request_seller_list':request_seller_list,'request_buyer_list':request_buyer_list})
-        else:
-            r1=Request.objects.all()
-            request_seller_list=[]
-            request_buyer_list=[]
-            for r in r1:
-                request_seller_list.append(r.seller_username)
-                request_buyer_list.append(r.buyer_username)
-            return render(request,"requests.html",{'r1':r1,'request_seller_list':request_seller_list,'request_buyer_list':request_buyer_list})
-def orders(request):
-    o1=Orders.objects.all()
-    return render(request,"orders.html",{'o1':o1})
-def sold(request):
-    o1=Orders.objects.all()
-    return render(request,"sold.html",{'o1':o1})
+        return render(request,"password1.html")
 
+def techform(request):
+    if request.method=='POST':
+        username=request.POST['username']
+        full_name=request.POST['full_name']
+        email=request.POST['email']
+        question=request.POST['question']
+        Techform.objects.create(username=username,full_name=full_name,email=email,question=question)
+        li=Signupalumni.objects.all()
+        l=li.values('email')
+        x=[]
+        for each in l:
+            x.append(each['email'])
+        send_mail(
+            'You have a question from Connect!',
+            question+"\n \n \n \nPlease login to answer",
+            'connect1822@gmail.com',
+            x,
+            fail_silently=False,
+        )
+        return redirect('/')
+    else:
+        sign = Signupstudent.objects.all()
+        return render(request,'techform.html',{'sign':sign})
+
+def technical(request):
+    if request.method == 'POST':
+        username=request.POST['username']
+        student_username=request.POST['student_username']
+        full_name=request.POST['full_name']
+        question=request.POST['question']
+        answer=request.POST['answer']
+        Techansform.objects.create(username=username,student_username=student_username,full_name=full_name,question=question,answer=answer)
+        x=Signupstudent.objects.filter(username=student_username)
+        l=x.values('email')
+        y=[]
+        for each in l:
+            y.append(each['email'])
+        send_mail(
+            'Here is your answer from '+full_name,
+            "Your Question : \n"+question+"\n \n \nAnswer: \n"+answer,
+            'connect1822@gmail.com',
+            y,
+            fail_silently=False,
+        )
+        return redirect('/technical')
+    else:
+        sign1=Signupstudent.objects.all()
+        sign2=Signupalumni.objects.all()
+        ans=Techansform.objects.order_by('question')
+        d = {}
+        for a in ans:
+            current_key = a.question  # the item's date
+            d.setdefault(current_key, []).append(a)
+        qn=Techform.objects.all()
+        ans1=Techansform.objects.all()
+        qn1=[]
+        current_user = request.user
+        for q in qn:
+            flag=0
+            for a in ans1:
+                if q.question == a.question and a.username == current_user.username:
+                    flag=1
+                    break
+            if flag==0:
+                qn1.append(q)
+        return render(request,'technical.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'d':d,'qn1':qn1})

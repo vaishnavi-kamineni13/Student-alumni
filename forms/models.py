@@ -1,22 +1,58 @@
+from pyexpat import model
 from django.db import models
 
 category_choices=[
-    ('books','Books'),
-    ('electronics','Electronics'),
-    ('stationery','Stationery'),
-    ('sports','Sports'),
-    ('others','Others')
+    ('Amazon','Amazon'),
+    ('JPMC','JPMC'),
+    ('Deloitte','Deloitte'),
+    ('TCS','TCS'),
+    ('Infosys','Infosys'),
+    ('Wipro','Wipro'),
+    ('Accenture','Accenture'),
+    ('LTI','LTI'),
+    ('Atlassian','Atlassian'),
+    ('NCR','NCR'),
+    ('Cognizant','Cognizant'),
+    ('Factset','Factset'),
+    ('Capgemini','Capgemini'),
+    ('ACS','ACS'),
+    ('Accolite','Accolite'),
+    ('F5','F5'),
+    ('StateStreet','StateStreet'),
+    ('DBS','DBS'),
+    ('Others','Others')
 ]
 
 # Create your models here.
-class Sellform(models.Model):
+class Questionform(models.Model):
     username=models.CharField(max_length=10)
+    full_name = models.CharField(max_length=30)
     email = models.EmailField(max_length=254)
-    category=models.CharField(max_length=15, choices=category_choices)
-    product_title=models.CharField(max_length=100)
-    description=models.TextField()
-    price=models.CharField(max_length=10)
-    img=models.ImageField(upload_to='pics')
+    companyname1=models.CharField(max_length=50, choices=category_choices)
+    companyname2=models.CharField(max_length=100)
+    question=models.TextField()
+
+class Techform(models.Model):
+    username=models.CharField(max_length=10)
+    full_name = models.CharField(max_length=30)
+    email = models.EmailField(max_length=254)
+    question=models.TextField()
+
+class Techansform(models.Model):
+    username=models.CharField(max_length=10)
+    student_username = models.CharField(max_length=10)
+    full_name = models.CharField(max_length=30)
+    question=models.CharField(max_length=500)
+    answer=models.TextField()
+
+class Answerform(models.Model):
+    username=models.CharField(max_length=10)
+    student_username = models.CharField(max_length=10)
+    full_name = models.CharField(max_length=30)
+    company = models.CharField(max_length=50)
+    question=models.CharField(max_length=500)
+    answer=models.TextField()
+
 class Eventform(models.Model):
     username=models.CharField(max_length=10)
     event_name=models.CharField(max_length=100)
@@ -27,10 +63,10 @@ class Eventform(models.Model):
     description=models.TextField()
     venue=models.CharField(max_length=100)
     img=models.ImageField(upload_to='pics')
-class Clubs(models.Model):
+
+class Event(models.Model):
     rollnumber=models.CharField(max_length=10)
     full_name=models.CharField(max_length=100)
     department=models.CharField(max_length=200)
     mobile_number=models.CharField(max_length=20)
     email=models.EmailField(max_length=254)
-    club_name=models.CharField(max_length=100)

@@ -24,16 +24,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+
+
 </head>
 
 <body>
-    <!-- ##### Header Area Start ##### -->
-    <header class="header_area">
+       <!-- ##### Header Area Start ##### -->
+       <header class="header_area">
         <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width:130px;" alt=""></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -45,26 +46,65 @@
                         <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                     </div>
                     <!-- Nav Start -->
-                    <div class="classynav">
+                    <div class="classynav" style="width: 600px;">
                         <ul>
                             <li><a href="{% url 'index' %}">Home</a></li>
-                            <li><a href="#">Products</a>
+                            <li><a href="#">Companies</a>
                                 <ul class="dropdown">
-                                    {% if user.is_authenticated %}
-                                    <li><a href="{% url 'books' my_username='user.username' %}">Books</a></li>
-                                    <li><a href="{% url 'electronics' my_username='user.username' %}">Electronic gadgets</a></li>
-                                    <li><a href="{% url 'stationery' my_username='user.username' %}">Stationery</a></li>
-                                    <li><a href="{% url 'sports' my_username='user.username' %}">Sports</a></li>
-                                    <li><a href="{% url 'others' my_username='user.username' %}">Others</a></li>
-                                    {% else %}
-                                    <li><a href="{% url 'books' my_username='x' %}">Books</a></li>
-                                    <li><a href="{% url 'electronics' my_username='x' %}">Electronic gadgets</a></li>
-                                    <li><a href="{% url 'stationery' my_username='x' %}">Stationery</a></li>
-                                    <li><a href="{% url 'sports' my_username='x' %}">Sports</a></li>
-                                    <li><a href="{% url 'others' my_username='x' %}">Others</a></li>
-                                    {% endif %}
+                                    <div class="row">
+                                        {% if user.is_authenticated %}
+                                        <div class="column" style="margin-left: 10px;">
+                                          <a href="{% url 'amazon' %}">Amazon</a>
+                                          <a href="{% url 'deloitte' %}">Deloitte</a>
+                                          <a href="{% url 'infosys' %}">Infosys</a>
+                                          <a href="{% url 'accenture' %}">Accenture</a>
+                                          <a href="{% url 'atlassian' %}">Atlassian</a>
+                                          <a href="{% url 'cognizant' %}">Cognizant</a>
+                                          <a href="{% url 'capgemini' %}">Capgemini</a>
+                                          <a href="{% url 'accolite' %}">Accolite</a>
+                                          <a href="{% url 'statestreet' %}">StateStreet</a>
+                                          <a href="{% url 'others' %}">Others</a>
+                                        </div>
+                                        <div class="column">
+                                          <a href="{% url 'jpmc' %}">JPMC</a>
+                                          <a href="{% url 'tcs' %}">TCS</a>
+                                          <a href="{% url 'wipro' %}">Wipro</a>
+                                          <a href="{% url 'lti' %}">LTI</a>
+                                          <a href="{% url 'ncr' %}">NCR</a>
+                                          <a href="{% url 'factset' %}">Factset</a>
+                                          <a href="{% url 'acs' %}">ACS</a>
+                                          <a href="{% url 'f5' %}">F5</a>
+                                          <a href="{% url 'dbs' %}">DBS</a>
+                                        </div>
+                                        {% else %}
+                                        <div class="column" style="margin-left: 10px;">
+                                            <a href="{% url 'login' %}">Amazon</a>
+                                            <a href="{% url 'login' %}">Deloitte</a>
+                                            <a href="{% url 'login' %}">Infosys</a>
+                                            <a href="{% url 'login' %}">Accenture</a>
+                                            <a href="{% url 'login' %}">Atlassian</a>
+                                            <a href="{% url 'login' %}">Cognizant</a>
+                                            <a href="{% url 'login' %}">Capgemini</a>
+                                            <a href="{% url 'login' %}">Accolite</a>
+                                            <a href="{% url 'login' %}">StateStreet</a>
+                                            <a href="{% url 'login' %}">Others</a>
+                                          </div>
+                                          <div class="column">
+                                            <a href="{% url 'login'%}">JPMC</a>
+                                            <a href="{% url 'login' %}">TCS</a>
+                                            <a href="{% url 'login' %}">Wipro</a>
+                                            <a href="{% url 'login' %}">LTI</a>
+                                            <a href="{% url 'login' %}">NCR</a>
+                                            <a href="{% url 'login' %}">Factset</a>
+                                            <a href="{% url 'login' %}">ACS</a>
+                                            <a href="{% url 'login' %}">F5</a>
+                                            <a href="{% url 'login'%}">DBS</a>
+                                          </div>
+                                          {% endif %}
+                                      </div>
                                 </ul>
                             </li>
+                            <li><a href="{% url 'technical' %}">Technical Forum</a></li>
                             <li><a href="{% url 'event' %}">Events</a></li>
                             <li class="highligh"><a href="{% url 'about' %}">About</a></li>
                         </ul>
@@ -76,32 +116,8 @@
 
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
-              <!-- {% if user.is_authenticated %}
-                {% for s in sign1 %}
-                {% if s.username == user.username %}
-                <div class="hello">
-                    <p style="text-align:center;">Hello,{{s.full_name}}</p>
-                </div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}-->
-                <!-- Search Area -->
-                <!--<div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
-                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </form>
-                </div>-->
                 <!-- Favourite Area -->
-                {% if user.is_authenticated %}
-                <div class="favourite-area">
-                    <a href="{% url 'favourites' direct='y' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
-                </div>
-                {% else %}
-                <div class="favourite-area">
-                    <a href="{% url 'login' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
-                </div>
-                {% endif %}
+                <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width: 150px; margin-top:20px;"></a>
                 <!-- User Login Info -->
                 {% if user.is_authenticated %}
                 <div class="user-login-info">
@@ -110,11 +126,7 @@
                             <div class="dropdown-content" style="width:100px;">
                                 <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">Profile</a>
                                 <hr style="margin-top:2px; margin-bottom:2px;">
-                                <a href="{% url 'requests' my_id=1 bool='x' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Requests</a>
-                                <hr style="margin-top:2px; margin-bottom:2px;">
-                                <a href="{% url 'orders' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Orders</a>
-                                <hr style="margin-top:2px; margin-bottom:2px;">
-                                <a href="{% url 'sold' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Items Sold</a>
+                                <a href="{% url 'discussions' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Discussions</a>
                                 <hr style="margin-top:2px; margin-bottom:2px;">
                                 <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
                             </div>
@@ -138,11 +150,15 @@
 
         <div class="contact-info">
             <h2>About Us</h2>
-            <p>Connect is an interaction platform for the VNR student community where they can buy and sell used goods and services such as books, electronics, stationery, sports etc .</p>
+            <p>
+                This Portal is an open forum where VNR college students can communicate with alumni of VNR. 
+                Students can ask questions/queries about placements, education, and general life by entering the question where alumni who wishes to address the specific question can answer .
+                The posted alumni events can also be viewed.
+            </p>
 
             <div class="contact-address mt-50">
                 <p style="font-size: 16px;"><span>Telephone :</span> +91 91234567891 </p>
-                <p style="font-size:16px;"><span>Email :</span> connectvnr07@gmail.com</p>
+                <p style="font-size:16px;"><span>Email :</span> connect1822@gmail.com</p>
             </div>
         </div>
 
@@ -180,10 +196,10 @@
                     <div class="single_widget_area">
                         <div class="footer_social_area">
                             <h6 style="color:white; margin-left:10px;">FOLLOW US</h6>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                            <a href="https://www.facebook.com/vnralums/" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="https://instagram.com/vnrvjietalumni?utm_medium=copy_link" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="https://twitter.com/vnrvjieto/" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="https://www.youtube.com/c/VNRVJIETChannel" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>

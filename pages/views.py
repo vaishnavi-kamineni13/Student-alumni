@@ -1,234 +1,651 @@
+import unicodedata
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
 from django.contrib import messages
 
-from accounts.models import Signup
-from forms.models import Sellform,Eventform
-from .models import Books,Electronics,Stationery,Sports,Others,Favourites
+from accounts.models import Signupalumni,Signupstudent
+from .models import Analysis
+from forms.models import Answerform, Questionform,Eventform,Event,Techansform
+from django.db.models import Q
+from django.core.mail import send_mail
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt,mpld3
+from matplotlib import cm
+import seaborn as sns
+import re
+import unicodedata
+import nltk
+import string
+from wordcloud import WordCloud, STOPWORDS
+from nltk.stem import WordNetLemmatizer
+import io
+import base64
+import os,sys
+from PIL import Image, ImageTk
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+ 
+lemmatizer = WordNetLemmatizer()
+
+stopwords = list(STOPWORDS)
+s=['knowledge','skills','amazon','work','jpmc','deloitte','tcs','infosys','wipro','accenture','lti','atlassian','ncr','cognizant','capgemini','factset','acs','accolite','f5','statestreet','dbs','major','environment',
+'environment','difficulty','level','questions', 'asked','are','required' , 'get', 'placed','youll','you','lot','interviewer','interview']
+stopwords.extend(s)
+
+
 
 # Create your views here.
-def general(sell):
-    if sell.category=='Books' or sell.category=='books':
-        Books.objects.create(username=sell.username,email=sell.email,product_title=sell.product_title,description=sell.description,price=sell.price,img=sell.img)
-    elif sell.category=='Electronics' or sell.category=='electronics':
-        Electronics.objects.create(username=sell.username,email=sell.email,product_title=sell.product_title,description=sell.description,price=sell.price,img=sell.img)
-    elif sell.category=='Stationery' or sell.category=='stationery':
-        Stationery.objects.create(username=sell.username,email=sell.email,product_title=sell.product_title,description=sell.description,price=sell.price,img=sell.img)
-    elif sell.category=='Sports' or sell.category=='sports':
-        Sports.objects.create(username=sell.username,email=sell.email,product_title=sell.product_title,description=sell.description,price=sell.price,img=sell.img)
-    else:
-        Others.objects.create(username=sell.username,email=sell.email,product_title=sell.product_title,description=sell.description,price=sell.price,img=sell.img)
-
-
-def favourite_list(my_username,category):
-    f1=Favourites.objects.all()
-    l=[]
-    fav_seller_username_list=[]
-    fav_pt_list=[]
-    for f in f1:
-        if my_username==f.favourite_username and f.category==category:
-            fav_seller_username_list.append(f.username)
-            fav_pt_list.append(f.product_title)
-    l.append(fav_seller_username_list)
-    l.append(fav_pt_list)
-    return l
-
+def clean_text(text):
+    text0=re.sub('<.*?>','',text)
+    text1=unicodedata.normalize('NFKD',text0).encode('ascii','ignore').decode('utf-8','ignore')
+    text2=re.sub(r'https\S+','',text1)
+    text3=re.sub('\s+',' ',text2)
+    text4=re.sub(r'\b\d+\b','',text3)
+    text5=re.sub(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$','',text4)
+    text6="".join([c for c in text5 if c not in string.punctuation])
+    tokens=re.split(r'\W+',text6)
+    text7=[word for word in tokens if word not in stopwords]
+    text=" ".join([lemmatizer.lemmatize(word) for word in text7])
+    return text
 
 def about(request): 
     return render(request,'about.html')
 
+def discussions(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.all()[::-1]
+    techans=Techansform.objects.all()[::-1]
+    return render(request,'discussions.html',{'sign1':sign1,'sign2':sign2,'ans':ans,'techans':techans})
 
-def books(request,my_username):
-    if my_username =='x':
-        books1=Books.objects.all()
-        return render(request,'books.html',{'books1':books1})
+def amazon(request):
+    if request.method=='POST':
+        question=request.POST['question']
+        answer=request.POST['answer']
+        companyname=request.POST['companyname']
+        usernameans= request.POST['usernameans']
+        Analysis.objects.create(question=question,answer=answer,companyname=companyname,usernameans=usernameans)
+        return redirect('amazon')
     else:
-        books1=Books.objects.all()
-        l=favourite_list(my_username,'Books')
-        return render(request,'books.html',{'books1':books1,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
+        sign1=Signupstudent.objects.all()
+        sign2=Signupalumni.objects.all()
+        ans=Answerform.objects.filter(company='Amazon').order_by('question')
+        d = {}
+        qnanalysis= ['What are the major skills required to get placed in Amazon ?','How is the work environment in Amazon ?','What is the difficulty level of coding questions asked in Amazon ?']
+        ansanalysis=Analysis.objects.filter(companyname='Amazon')
 
+        for a in ans:
+            current_key = a.question  # the item's date
+            d.setdefault(current_key, []).append(a)
+        qn=Questionform.objects.filter(companyname1='Amazon')[::-1]
+        ans1=Answerform.objects.all()
+        qn1=[]
+        current_user = request.user
+        for q in qn:
+            flag=0
+            for a in ans1:
+                if q.question == a.question and a.username == current_user.username:
+                    flag=1
+                    break
+            if flag==0:
+                qn1.append(q)
 
-def electronics(request,my_username):
-    if my_username =='x':
-        electronics1=Electronics.objects.all()
-        return render(request,'electronics.html',{'electronics1':electronics1})
+        analysis=[]
+        for x in qnanalysis:
+            flag=0
+            for y in ansanalysis:
+                if x == y.question and y.usernameans == current_user.username:
+                    flag=1
+                    break
+            if flag==0:
+                analysis.append(x)
+        #question 1
+        an=Analysis.objects.filter(question=qnanalysis[0])
+        v=[]
+        for each in an:
+            v.append(each.answer)
+        df = pd.DataFrame(v)
+        df.columns=['Answer']
+        df['clean_answer']=df['Answer'].apply(lambda x: clean_text(x.lower()))
+        df1=df[['clean_answer']]
+        plt.figure(figsize=(20,30))
+        print(df1)
+        os.chdir(r'C:\Users\Dell\major\Student-alumni\static\img')
+        s=""
+        for i in range(len(df1)) :
+            value = df1.loc[i, "clean_answer"]
+            # Create and generate a word cloud image:
+            #mask2 = np.array(Image.open("circle.png"))
+            s=s+" "+ value
+        wordcloud = WordCloud(background_color="white", stopwords=stopwords,height=400,width=400)
+        wordcloud.generate(s)
+        wordcloud.to_file('wordcloud.png')
+        #question 2
+        an=Analysis.objects.filter(question=qnanalysis[1])
+        v=[]
+        for each in an:
+            v.append(each.answer)
+        df = pd.DataFrame(v)
+        df.columns=['Answer']
+        df['clean_answer']=df['Answer'].apply(lambda x: clean_text(x.lower()))
+        df1=df[['clean_answer']]
+        plt.figure(figsize=(20,30))
+        print(df1)
+        os.chdir(r'C:\Users\Dell\major\Student-alumni\static\img')
+        s=""
+        for i in range(len(df1)) :
+            value = df1.loc[i, "clean_answer"]
+            # Create and generate a word cloud image:
+            #mask2 = np.array(Image.open("circle.png"))
+            s=s+" "+ value
+        wordcloud = WordCloud(background_color="white", stopwords=stopwords,height=400,width=400)
+        wordcloud.generate(s)
+        wordcloud.to_file('wordcloud1.png')
+        #question 3
+        an=Analysis.objects.filter(question=qnanalysis[2])
+        v=[]
+        for each in an:
+            v.append(each.answer)
+        df = pd.DataFrame(v)
+        df.columns=['Answer']
+        df['clean_answer']=df['Answer'].apply(lambda x: clean_text(x.lower()))
+        df1=df[['clean_answer']]
+        plt.figure(figsize=(20,30))
+        print(df1)
+        os.chdir(r'C:\Users\Dell\major\Student-alumni\static\img')
+        s=""
+        for i in range(len(df1)) :
+            value = df1.loc[i, "clean_answer"]
+            # Create and generate a word cloud image:
+            #mask2 = np.array(Image.open("circle.png"))
+            s=s+" "+ value
+        wordcloud = WordCloud(background_color="white", stopwords=stopwords,height=400,width=400)
+        wordcloud.generate(s)
+        wordcloud.to_file('wordcloud2.png')
+        return render(request,'amazon.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'d':d,'qn1':qn1,'analysis':analysis})
+
+def jpmc(request):
+    if request.method=='POST':
+        question=request.POST['question']
+        answer=request.POST['answer']
+        companyname=request.POST['companyname']
+        usernameans= request.POST['usernameans']
+        Analysis.objects.create(question=question,answer=answer,companyname=companyname,usernameans=usernameans)
+        return redirect('jpmc')
     else:
-        electronics1=Electronics.objects.all()
-        l=favourite_list(my_username,'Electronics')
-        return render(request,'electronics.html',{'electronics1':electronics1,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
+        sign1=Signupstudent.objects.all()
+        sign2=Signupalumni.objects.all()
+        ans=Answerform.objects.filter(company='JPMC').order_by('question')
+        d = {}
+        qnanalysis= ['What are the major skills required to get placed in JPMC ?','How is the work environment in JPMC ?','What is the difficulty level of coding questions asked in JPMC ?']
+        ansanalysis=Analysis.objects.filter(companyname='JPMC')
 
+        for a in ans:
+            current_key = a.question  # the item's date
+            d.setdefault(current_key, []).append(a)
+        qn=Questionform.objects.filter(companyname1='JPMC')[::-1]
+        ans1=Answerform.objects.all()
+        qn1=[]
+        current_user = request.user
+        for q in qn:
+            flag=0
+            for a in ans1:
+                if q.question == a.question and a.username == current_user.username:
+                    flag=1
+                    break
+            if flag==0:
+                qn1.append(q)
+
+        analysis=[]
+        for x in qnanalysis:
+            flag=0
+            for y in ansanalysis:
+                if x == y.question and y.usernameans == current_user.username:
+                    flag=1
+                    break
+            if flag==0:
+                analysis.append(x)
+        #question 1
+        an=Analysis.objects.filter(question=qnanalysis[0])
+        v=[]
+        for each in an:
+            v.append(each.answer)
+        df = pd.DataFrame(v)
+        df.columns=['Answer']
+        df['clean_answer']=df['Answer'].apply(lambda x: clean_text(x.lower()))
+        df1=df[['clean_answer']]
+        plt.figure(figsize=(20,30))
+        print(df1)
+        os.chdir(r'C:\Users\Dell\major\Student-alumni\static\img')
+        s=""
+        for i in range(len(df1)) :
+            value = df1.loc[i, "clean_answer"]
+            # Create and generate a word cloud image:
+            #mask2 = np.array(Image.open("circle.png"))
+            s=s+" "+ value
+        wordcloud = WordCloud(background_color="white", stopwords=stopwords,height=400,width=400)
+        wordcloud.generate(s)
+        wordcloud.to_file('wordcloud3.png')
+        #question 2
+        an=Analysis.objects.filter(question=qnanalysis[1])
+        v=[]
+        for each in an:
+            v.append(each.answer)
+        df = pd.DataFrame(v)
+        df.columns=['Answer']
+        df['clean_answer']=df['Answer'].apply(lambda x: clean_text(x.lower()))
+        df1=df[['clean_answer']]
+        plt.figure(figsize=(20,30))
+        print(df1)
+        os.chdir(r'C:\Users\Dell\major\Student-alumni\static\img')
+        s=""
+        for i in range(len(df1)) :
+            value = df1.loc[i, "clean_answer"]
+            # Create and generate a word cloud image:
+            #mask2 = np.array(Image.open("circle.png"))
+            s=s+" "+ value
+        wordcloud = WordCloud(background_color="white", stopwords=stopwords,height=400,width=400)
+        wordcloud.generate(s)
+        wordcloud.to_file('wordcloud4.png')
+        #question 3
+        an=Analysis.objects.filter(question=qnanalysis[2])
+        v=[]
+        for each in an:
+            v.append(each.answer)
+        df = pd.DataFrame(v)
+        df.columns=['Answer']
+        df['clean_answer']=df['Answer'].apply(lambda x: clean_text(x.lower()))
+        df1=df[['clean_answer']]
+        plt.figure(figsize=(20,30))
+        print(df1)
+        os.chdir(r'C:\Users\Dell\major\Student-alumni\static\img')
+        s=""
+        for i in range(len(df1)) :
+            value = df1.loc[i, "clean_answer"]
+            # Create and generate a word cloud image:
+            #mask2 = np.array(Image.open("circle.png"))
+            s=s+" "+ value
+        wordcloud = WordCloud(background_color="white", stopwords=stopwords,height=400,width=400)
+        wordcloud.generate(s)
+        wordcloud.to_file('wordcloud5.png')
+        return render(request,'jpmc.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'d':d,'qn1':qn1,'analysis':analysis})
+def deloitte(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Deloitte').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Deloitte')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'deloitte.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def tcs(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='TCS').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='TCS')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'tcs.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def infosys(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Infosys').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Infosys')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'infosys.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def wipro(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Wipro').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Wipro')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'wipro.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def accenture(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Accenture').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Accenture')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'accenture.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def lti(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='LTI').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='LTI')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'lti.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def atlassian(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Atlassian').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Atlassian')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'atlassian.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def ncr(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='NCR').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='NCR')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'ncr.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def cognizant(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Cognizant').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Cognizant')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'cognizant.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def factset(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Facset').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Facset')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'factset.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def capgemini(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Capgemini').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Capgemini')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'capgemini.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def acs(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='ACS').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='ACS')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'acs.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def accolite(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Accolite').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Accolite')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'accolite.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def f5(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='F5').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='F5')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'f5.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def statestreet(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='Statestreet').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='Statestreet')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'statestreet.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def dbs(request):
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    ans=Answerform.objects.filter(company='DBS').order_by('question')
+    d = {}
+    for a in ans:
+        current_key = a.question  # the item's date
+        d.setdefault(current_key, []).append(a)
+    qn=Questionform.objects.filter(companyname1='DBS')
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'dbs.html',{'ans':ans,'sign1':sign1,'sign2':sign2,'qn':qn,'d':d,'qn1':qn1})
+
+def others(request):
+    companies=['Amazon','JPMC','Deloitte','TCS','Infosys','Wipro','Accenture','LTI','Atlassian','NCR','Cognizant','Factset','Capgemini','ACS','Accolite','F5','Statestreet','DBS']
+    sign1=Signupstudent.objects.all()
+    sign2=Signupalumni.objects.all()
+    qn=Questionform.objects.filter(companyname1='Others')
+    ans= Answerform.objects.exclude(company__in=companies)
+    ans1=Answerform.objects.all()
+    qn1=[]
+    current_user = request.user
+    for q in qn:
+        flag=0
+        for a in ans1:
+            if q.question == a.question and a.username == current_user.username:
+                flag=1
+                break
+        if flag==0:
+            qn1.append(q)
+    return render(request,'others.html',{'sign1':sign1,'sign2':sign2,'qn':qn,'ans':ans,'qn1':qn1})
 
 def event(request):
     event1=Eventform.objects.all()
-    return render(request,'event.html',{'event1':event1})
+    event=Event.objects.all()
+    return render(request,'event.html',{'event1':event1,'event':event})
 
-
-def favourites(request,direct):
-    if request.method=='POST':
-        pt=request.POST['pt']
-        #img=request.FILES['img']
-        price=request.POST['price']
-        sid=request.POST['sid']
-        fid=request.POST['fid']
-        cat=request.POST['cat']
-        description=request.POST['description']
-
-        if cat=='Books':
-            b1=Books.objects.get(product_title=pt,price=price)
-            img=b1.img
-        elif cat=='Electronics':
-            e1=Electronics.objects.get(product_title=pt,price=price)
-            img=e1.img
-        elif cat=='Stationery':
-            s1=Stationery.objects.get(product_title=pt,price=price)
-            img=s1.img
-        elif cat=='Sports':
-            sp1=Sports.objects.get(product_title=pt,price=price)
-            img=sp1.img
-        else:
-            o1=Others.objects.get(product_title=pt,price=price)
-            img=o1.img
-        if Favourites.objects.filter(username=sid,favourite_username=fid,img=img,price=price,product_title=pt,category=cat,description=description).exists():
-            f1=Favourites.objects.get(username=sid,favourite_username=fid,img=img,price=price,product_title=pt,category=cat,description=description)
-            f1.delete()
-        else:
-            Favourites.objects.create(username=sid,favourite_username=fid,img=img,price=price,product_title=pt,category=cat,description=description)
-        if direct=='favpage':
-            return redirect('favourites',direct='favpage')
-        elif direct=='single':
-            s2=Sellform.objects.get(username=sid,img=img)
-            return redirect('single_product_details',my_id=s2.id,my_username=fid)
-        else:
-            if cat=='Books':
-                if direct=='x':
-                    return redirect('books',my_username=fid)
-                else:
-                    b1=Books.objects.get(username=sid,img=img)
-                    return redirect('books_product_details',my_id=b1.id,my_username=fid)
-            elif cat=='Electronics' :
-                if direct=='x':
-                    return redirect('electronics',my_username=fid)
-                else:
-                    e1=Electronics.objects.get(username=sid,img=img)
-                    return redirect('electronics_product_details',my_id=e1.id,my_username=fid)
-            elif cat=='Sports' :
-                if direct=='x':
-                    return redirect('sports',my_username=fid)
-                else:
-                    sp1=Sports.objects.get(username=sid,img=img)
-                    return redirect('sports_product_details',my_id=sp1.id,my_username=fid)
-            elif cat=='Stationery':
-                if direct=='x':
-                    return redirect('stationery',my_username=fid)
-                else:
-                    s1=Stationery.objects.get(username=sid,img=img)
-                    return redirect('stationery_product_details',my_id=s1.id,my_username=fid)
-            elif cat=='Others':
-                if direct=='x':
-                    return redirect('others',my_username=fid)
-                else:
-                    o1=Others.objects.get(username=sid,img=img)
-                    return redirect('others_product_details',my_id=o1.id,my_username=fid)
-    else:
-        f1=Favourites.objects.all()
-        favourite_username_list=[]
-        for f in f1:
-            favourite_username_list.append(f.favourite_username)
-        return render(request,'favourites.html',{'f1':f1,'favourite_username_list':favourite_username_list})
-
-
-def others(request,my_username):
-    if my_username =='x':
-        others1=Others.objects.all()
-        return render(request,'others.html',{'others1':others1})
-    else:
-        others1=Others.objects.all()
-        l=favourite_list(my_username,'Others')
-        return render(request,'others.html',{'others1':others1,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-
-
-def books_product_details(request,my_id,my_username):
-    if my_username =='x':
-        x=Books.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        return render(request,'books_product_details.html',{'x':x,'y':y})
-    else:
-        x=Books.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        l=favourite_list(my_username,'Books')
-        return render(request,'books_product_details.html',{'x':x,'y':y,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-
-def electronics_product_details(request,my_id,my_username):
-    if my_username =='x':
-        x=Electronics.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        return render(request,'electronics_product_details.html',{'x':x,'y':y})
-    else:
-        x=Electronics.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        l=favourite_list(my_username,'Electronics')
-        return render(request,'electronics_product_details.html',{'x':x,'y':y,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-
-def stationery_product_details(request,my_id,my_username):
-    if my_username=='x':
-        x=Stationery.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        return render(request,'stationery_product_details.html',{'x':x,'y':y})
-    else:
-        x=Stationery.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        l=favourite_list(my_username,'Stationery')
-        return render(request,'stationery_product_details.html',{'x':x,'y':y,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-def sports_product_details(request,my_id,my_username):
-    if my_username=='x':
-        x=Sports.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        return render(request,'sports_product_details.html',{'x':x,'y':y})
-    else:
-        x=Sports.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        l=favourite_list(my_username,'Sports')
-        return render(request,'sports_product_details.html',{'x':x,'y':y,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-    
-def others_product_details(request,my_id,my_username):
-    if my_username=='x':
-        x=Others.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        return render(request,'others_product_details.html',{'x':x,'y':y})
-    else:
-        x=Others.objects.get(id=my_id)
-        y=Signup.objects.get(username=x.username)
-        l=favourite_list(my_username,'Others')
-        return render(request,'others_product_details.html',{'x':x,'y':y,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-
-def favourite_product_details(request,my_id):
-    x=Favourites.objects.get(id=my_id)
-    y=Signup.objects.get(username=x.username)
-    return render(request,'favourite_product_details.html',{'x':x,'y':y})
-
-
-def sports(request,my_username):
-    if my_username =='x':
-        sports1=Sports.objects.all()
-        return render(request,'sports.html',{'sports1':sports1})
-    else:
-        sports1=Sports.objects.all()
-        l=favourite_list(my_username,'Sports')
-        return render(request,'sports.html',{'sports1':sports1,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
-
-
-def stationery(request,my_username):
-    if my_username =='x':
-        stationery1=Stationery.objects.all()
-        return render(request,'stationery.html',{'stationery1':stationery1})
-    else:
-        stationery1=Stationery.objects.all()
-        l=favourite_list(my_username,'Stationery')
-        return render(request,'stationery.html',{'stationery1':stationery1,'fav_seller_username_list':l[0],'fav_pt_list':l[1]})
+def statistics(request):
+    return render(request,'statistics.html')
 

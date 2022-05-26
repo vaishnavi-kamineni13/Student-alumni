@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- The above 4 meta tags must come first in the head; any other head content must come after these tags -->
 
     <!-- Title  -->
     <title>Profile</title>
@@ -36,109 +36,122 @@
 
 
 </head>
+
 <body>
-        <!-- ##### Header Area Start ##### -->
-        <header class="header_area" style="font-family: 'Chelsea Market', cursive;">
-            <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
-                <!-- Classy Menu -->
-                <nav class="classy-navbar" id="essenceNav">
-                    <!-- Logo -->
-                    <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width:130px;" alt=""></a>
-                    <!-- Navbar Toggler -->
-                    <div class="classy-navbar-toggler">
-                        <span class="navbarToggler"><span></span><span></span><span></span></span>
-                    </div>
-                    <!-- Menu -->
-                    <div class="classy-menu">
-                        <!-- close btn -->
-                        <div class="classycloseIcon">
-                            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
-                        </div>
-                        <!-- Nav Start -->
-                        <div class="classynav">
-                            <ul>
-                                <li><a href="{% url 'index' %}">Home</a></li>
-                                <li><a href="#">Products</a>
-                                    <ul class="dropdown">
-                                        {% if user.is_authenticated %}
-                                        <li class="nohigh"><a href="{% url 'books' my_username=user.username %}">Books</a></li>
-                                        <li><a href="{% url 'electronics' my_username=user.username %}">Electronic gadgets</a></li>
-                                        <li><a href="{% url 'stationery' my_username=user.username %}">Stationery</a></li>
-                                        <li><a href="{% url 'sports' my_username=user.username %}">Sports</a></li>
-                                        <li><a href="{% url 'others' my_username=user.username %}">Others</a></li>
-                                        {% else %}
-                                        <li class="nohigh"><a href="{% url 'books' my_username='x' %}">Books</a></li>
-                                        <li><a href="{% url 'electronics' my_username='x' %}">Electronic gadgets</a></li>
-                                        <li><a href="{% url 'stationery' my_username='x' %}">Stationery</a></li>
-                                        <li><a href="{% url 'sports' my_username='x' %}">Sports</a></li>
-                                        <li><a href="{% url 'others' my_username='x' %}">Others</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                                <li><a href="{% url 'event' %}">Events</a></li>
-                                <li><a href="{% url 'about' %}">About</a></li>
-                            </ul>
-                        </div>
-                        <!-- Nav End -->
-                    </div>
-    
-                </nav>
-    
-                <!-- Header Meta Data -->
-                <div class="header-meta d-flex clearfix justify-content-end">
-                  <!-- {% if user.is_authenticated %}
-                    {% for s in sign1 %}
-                    {% if s.username == user.username %}
-                    <div class="hello">
-                        <p style="text-align:center;">Hello,{{s.full_name}}</p>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                    {% endif %}-->
-                    <!-- Search Area -->
-                    <!--<div class="search-area">
-                        <form action="#" method="post">
-                            <input type="search" name="search" id="headerSearch" placeholder="Type for search">
-                            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                        </form>
-                    </div>-->
-                    <!-- Favourite Area -->
-                    {% if user.is_authenticated %}
-                    <div class="favourite-area">
-                        <a href="{% url 'favourites' direct='y' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
-                    </div>
-                    {% else %}
-                    <div class="favourite-area">
-                        <a href="{% url 'login' %}"><i class="fa fa-heart-o mt-md-4" style="font-size:22px;"></i></a>
-                    </div>
-                    {% endif %}
-                    <!-- User Login Info -->
-                    {% if user.is_authenticated %}
-                    <div class="user-login-info">
-                        <div class="dropdown">
-                            <a href="#"><i class="fa fa-user mt-md-4" aria-hidden="true" style="font-size: 22px;"></i></a>
-                                <div class="dropdown-content" style="width:100px;">
-                                    <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#000000; border-left:none;">Profile</a>
-                                    <hr style="margin-top:2px; margin-bottom:2px;">
-                                    <a href="{% url 'requests' my_id=1 bool='x' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Requests</a>
-                                    <hr style="margin-top:2px; margin-bottom:2px;">
-                                    <a href="{% url 'orders' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Orders</a>
-                                    <hr style="margin-top:2px; margin-bottom:2px;">
-                                    <a href="{% url 'sold' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Items Sold</a>
-                                    <hr style="margin-top:2px; margin-bottom:2px;">
-                                    <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
-                                </div>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="user-login-info">
-                        <a href="{% url 'login' %}"><i class="fa fa-user-o" aria-hidden="true" style="font-size: 20px;"></i></a>
-                    </div>
-                    {% endif %}
+   <!-- ##### Header Area Start ##### -->
+   <header class="header_area">
+    <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
+        <!-- Classy Menu -->
+        <nav class="classy-navbar" id="essenceNav">
+            <!-- Logo -->
+            <!-- Navbar Toggler -->
+            <div class="classy-navbar-toggler">
+                <span class="navbarToggler"><span></span><span></span><span></span></span>
+            </div>
+            <!-- Menu -->
+            <div class="classy-menu">
+                <!-- close btn -->
+                <div class="classycloseIcon">
+                    <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                 </div>
-        </header>
-        <!-- ##### Header Area End ##### -->
+                <!-- Nav Start -->
+                <div class="classynav" style="width: 600px;">
+                    <ul>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="#">Companies</a>
+                            <ul class="dropdown">
+                                <div class="row">
+                                    {% if user.is_authenticated %}
+                                    <div class="column" style="margin-left: 10px;">
+                                      <a href="{% url 'amazon' %}">Amazon</a>
+                                      <a href="{% url 'deloitte' %}">Deloitte</a>
+                                      <a href="{% url 'infosys' %}">Infosys</a>
+                                      <a href="{% url 'accenture' %}">Accenture</a>
+                                      <a href="{% url 'atlassian' %}">Atlassian</a>
+                                      <a href="{% url 'cognizant' %}">Cognizant</a>
+                                      <a href="{% url 'capgemini' %}">Capgemini</a>
+                                      <a href="{% url 'accolite' %}">Accolite</a>
+                                      <a href="{% url 'statestreet' %}">StateStreet</a>
+                                      <a href="{% url 'others' %}">Others</a>
+                                    </div>
+                                    <div class="column">
+                                      <a href="{% url 'jpmc' %}">JPMC</a>
+                                      <a href="{% url 'tcs' %}">TCS</a>
+                                      <a href="{% url 'wipro' %}">Wipro</a>
+                                      <a href="{% url 'lti' %}">LTI</a>
+                                      <a href="{% url 'ncr' %}">NCR</a>
+                                      <a href="{% url 'factset' %}">Factset</a>
+                                      <a href="{% url 'acs' %}">ACS</a>
+                                      <a href="{% url 'f5' %}">F5</a>
+                                      <a href="{% url 'dbs' %}">DBS</a>
+                                    </div>
+                                    {% else %}
+                                    <div class="column" style="margin-left: 10px;">
+                                        <a href="{% url 'login' %}">Amazon</a>
+                                        <a href="{% url 'login' %}">Deloitte</a>
+                                        <a href="{% url 'login' %}">Infosys</a>
+                                        <a href="{% url 'login' %}">Accenture</a>
+                                        <a href="{% url 'login' %}">Atlassian</a>
+                                        <a href="{% url 'login' %}">Cognizant</a>
+                                        <a href="{% url 'login' %}">Capgemini</a>
+                                        <a href="{% url 'login' %}">Accolite</a>
+                                        <a href="{% url 'login' %}">StateStreet</a>
+                                        <a href="{% url 'login' %}">Others</a>
+                                      </div>
+                                      <div class="column">
+                                        <a href="{% url 'login'%}">JPMC</a>
+                                        <a href="{% url 'login' %}">TCS</a>
+                                        <a href="{% url 'login' %}">Wipro</a>
+                                        <a href="{% url 'login' %}">LTI</a>
+                                        <a href="{% url 'login' %}">NCR</a>
+                                        <a href="{% url 'login' %}">Factset</a>
+                                        <a href="{% url 'login' %}">ACS</a>
+                                        <a href="{% url 'login' %}">F5</a>
+                                        <a href="{% url 'login'%}">DBS</a>
+                                      </div>
+                                      {% endif %}
+                                  </div>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'technical' %}">Technical Forum</a></li>
+                        <li><a href="{% url 'event' %}">Events</a></li>
+                        <li><a href="{% url 'about' %}">About</a></li>
+                    </ul>
+                </div>
+                <!-- Nav End -->
+            </div>
+
+        </nav>
+
+        <!-- Header Meta Data -->
+        <div class="header-meta d-flex clearfix justify-content-end">
+            <!-- Favourite Area -->
+            <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/connect.png' %}" style="width: 150px; margin-top:20px;"></a>
+            <!-- User Login Info -->
+            {% if user.is_authenticated %}
+            <div class="user-login-info">
+                <div class="dropdown">
+                    <a href="#"><i class="fa fa-user mt-md-4" aria-hidden="true" style="font-size: 22px;"></i></a>
+                        <div class="dropdown-content" style="width:100px;">
+                            <a href="{% url 'profile' %}" class="mental" style="line-height:2; text-align:left; color:#787878; border-left:none;">Profile</a>
+                            <hr style="margin-top:2px; margin-bottom:2px;">
+                            <a href="{% url 'discussions' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Discussions</a>
+                            <hr style="margin-top:2px; margin-bottom:2px;">
+                            <a href="{% url 'logout' %}" style="line-height:2; text-align:left; color:#787878; border-left:none;">Logout</a>
+                        </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="user-login-info">
+                <a href="{% url 'login' %}"><i class="fa fa-user-o" aria-hidden="true" style="font-size: 20px;"></i></a>
+            </div>
+            {% endif %}
+        </div>
+</header>
+<!-- ##### Header Area End ##### -->
     <!-- Hero section start -->
+    {% for s in sign2 %}
+    {% if s.username == user.username %}
 	<section class="hero-section spad">
 		<div class="container-fluid">
 			<div class="row">
@@ -146,8 +159,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="hero-text">
-                                {% for s in sign1 %}
-                                {% if s.username == user.username %}
+                                
                                 <div class="hello">
                                     <p style="text-align:center; font-size:50px; color:#2a69b0">Hello, {{s.full_name}} :-)</p>
                                 </div>
@@ -178,7 +190,53 @@
                             </div>
                             {% endif %}
                             {% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+    {% for s in sign3 %}
+    {% if s.username == user.username %}
+    <section class="hero-section spad">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xl-10 offset-xl-1">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="hero-text">
+                                <div class="hello">
+                                    <p style="text-align:center; font-size:50px; color:#2a69b0">Hello, {{s.full_name}} :-)</p>
+                                </div>
 
+							</div>
+							<div class="hero-info">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6">
+                                        <h2>General Info</h2>
+                                        <ul>
+                                            <li><span>Username</span>{{user.username}}</li>
+                                            <li><span>Password</span>{% for i in s.password %}
+                                            *
+                                            {% endfor %}
+                                        </li>
+                                        <li><span>Company</span>{{s.company_name}}</li>
+                                        </ul>
+                                    </div>
+                                   
+                                <div class="col-12 col-lg-6 pt-5 pt-lg-0" >
+                                    <h2>Contact Info</h2>
+                                    <ul>
+                                        <li><a href="#" style="font-size: 24px; padding-right:25px; color:#40424a">Email</a> {{user.email}}</li>
+                                        <li><span>Phone </span>{{s.mobile_number}}</li>
+                                    </ul>
+                                </div>
+                                </div>
+                                <p style="margin-top: 80px;"><a href="{% url 'password1' %}" style="font-size:24px; text-decoration:underline; color:#3366bb" >Change Password</a></p>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
 							</div>
 						</div>
 					</div>
@@ -188,7 +246,7 @@
 	</section>
 	<!-- Hero section end -->
     <!-- ##### Footer Area Start ##### -->
-    <footer class="footer_area clearfix" style="font-family: 'Chelsea Market', cursive;">
+    <footer class="footer_area clearfix">
         <div class="container">
             <div class="row">
                 <!-- Single Widget Area -->
@@ -219,10 +277,10 @@
                     <div class="single_widget_area">
                         <div class="footer_social_area">
                             <h6 style="color:white; margin-left:10px;">FOLLOW US</h6>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                            <a href="https://www.facebook.com/vnralums/" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="https://instagram.com/vnrvjietalumni?utm_medium=copy_link" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="https://twitter.com/vnrvjieto/" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="https://www.youtube.com/c/VNRVJIETChannel" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -254,29 +312,6 @@
     <script src="{% static 'js/classy-nav.min.js' %}"></script>
     <!-- Active js -->
     <script src="{% static 'js/active.js' %}"></script>
-    <!-- GetButton.io widget -->
-<script type="text/javascript">
-    (function () {
-        var options = {
-            whatsapp: "{{user.mobilenumber}}", // WhatsApp number
-            call_to_action: "Message us", // Call to action
-            position: "right", // Position may be 'right' or 'left'
-        };
-        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
-        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
-        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
-        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
-    })();
-</script>
-<!-- /GetButton.io widget -->
-
-
-
-	
-	
-
-
-
 </body>
 
 </html>

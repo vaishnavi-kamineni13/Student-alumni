@@ -263,9 +263,9 @@ img {
 
   .sell-btn{
     text-transform: uppercase;
-    font-size: 20px;
+    font-size: 40px;
     color:#247296;
-    background-color: #ffffff;
+    background-color: #d93621;
     font-family: 'Acme','sans-serif';
     font-weight: 900;
   }
